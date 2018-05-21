@@ -34,32 +34,7 @@ const LoginComponent = class extends Component {
 
 
     componentDidMount() {
-        window.fbAsyncInit = function () {
-            window.FB.init({
-                appId: '165917417435636',
-                cookie: true,
-                xfbml: true,
-                version: 'v2.8',
-            });
-            window.FB.AppEvents.logPageView();
 
-            window.FB.Event.subscribe('auth.statusChange', (res) => {
-                if (res.authResponse) {
-                    LoginComponent.updateLoggedInState(res);
-                } else {
-                    LoginComponent.updateLoggedInState();
-                }
-            });
-        };
-
-
-        (function (d, s, id) {
-            const fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            const js = d.createElement(s); js.id = id;
-            js.src = 'https://connect.facebook.net/en_US/sdk.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
     }
 
     async login() {
@@ -80,15 +55,6 @@ const LoginComponent = class extends Component {
     render() {
         return (
             <div>
-                <div
-                    className="fb-login-button"
-                    data-max-rows="1"
-                    data-size="large"
-                    data-button-type="continue_with"
-                    data-show-faces="false"
-                    data-auto-logout-link="false"
-                    data-use-continue-as="false"
-                />
                 <div className="App">
                     <p>{this.state.user ? `Hi, ${this.state.user.displayName}!` : 'Hi!'}</p>
                     <button onClick={this.login}>
@@ -99,6 +65,27 @@ const LoginComponent = class extends Component {
                       Logout
                     </button>
                 </div>
+
+                <section className="hero is-success is-fullheight">
+                    <div className="hero-body">
+                        <div className="container has-text-centered">
+                            <div className="column is-4 is-offset-4">
+                                <h3 className="title has-text-grey">Login</h3>
+                                <p className="subtitle has-text-grey">Please login to proceed.</p>
+                                <div className="box">
+                                    <figure className="avatar">
+                                        <img src="https://placehold.it/128x128" alt="Placeholder" />
+                                    </figure>
+                                </div>
+                                <p className="has-text-grey">
+                                    <a href="../">Sign Up</a> &nbsp;·&nbsp;
+                                    <a href="../">Forgot Password</a> &nbsp;·&nbsp;
+                                    <a href="../">Need Help?</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         );
     }

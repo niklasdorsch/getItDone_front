@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "bulma": "^0.7.1",
     "bulma-react": "0.0.8",
     "firebase": "^5.0.2",
     "lodash": "^4.17.10",
