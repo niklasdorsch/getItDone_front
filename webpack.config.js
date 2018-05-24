@@ -5,7 +5,8 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        app: ['babel-polyfill', './src/index.jsx'],
+        app: ['babel-polyfill', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
+            './src/index.jsx'],
     },
     devtool: 'inline-source-map',
     devServer: {

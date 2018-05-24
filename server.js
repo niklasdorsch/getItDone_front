@@ -4,7 +4,7 @@ const fs = require('fs');
 const https = require('https');
 const config = require('./webpack.config.js');
 const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require("webpack-hot-middleware");
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = express();
 const compiler = webpack(config);
@@ -24,7 +24,9 @@ app.use(webpackDevMiddleware(compiler, {
 }));
 
 app.use(webpackHotMiddleware(compiler, {
-    publicPath: config.output.publicPath,
+    log: false,
+    path: '/__webpack_hmr',
+    heartbeat: 10 * 1000,
 }));
 
 const server = https.createServer(options, app).listen(3000, () => {

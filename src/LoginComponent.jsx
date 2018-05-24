@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { sampleAction } from './actions';
 import { auth, provider } from './firebase';
 
+import FacebookButton from './FacebookButton';
+
 const mapStateToProps = function (state) {
     return {
         word: state.sample.user,
@@ -16,6 +18,7 @@ const mapDispatchToProps = function (dispatch) {
         },
     };
 };
+
 
 const LoginComponent = class extends Component {
     static updateLoggedInState(res) {
@@ -55,31 +58,15 @@ const LoginComponent = class extends Component {
     render() {
         return (
             <div>
-                <div className="App">
-                    <p>{this.state.user ? `Hi, ${this.state.user.displayName}!` : 'Hi!'}</p>
-                    <button onClick={this.login}>
-                      Login with Facebook
-                    </button>
-
-                    <button onClick={this.logout}>
-                      Logout
-                    </button>
-                </div>
-
-                <section className="hero is-success is-fullheight">
+                <section className="hero is-fullheight">
                     <div className="hero-body">
                         <div className="container has-text-centered">
                             <div className="column is-4 is-offset-4">
-                                <h3 className="title has-text-grey">Login</h3>
-                                <p className="subtitle has-text-grey">Please login to proceed.</p>
-                                <div className="box">
-                                    <figure className="avatar">
-                                        <img src="https://placehold.it/128x128" alt="Placeholder" />
-                                    </figure>
-                                </div>
+                                <h3 className="title has-text-grey">Get it done</h3>
+                                <p className="subtitle has-text-grey">An app that let&#39;s you crowdsource your event</p>
+                                <FacebookButton method={this.login} />
+                                <br />
                                 <p className="has-text-grey">
-                                    <a href="../">Sign Up</a> &nbsp;·&nbsp;
-                                    <a href="../">Forgot Password</a> &nbsp;·&nbsp;
                                     <a href="../">Need Help?</a>
                                 </p>
                             </div>

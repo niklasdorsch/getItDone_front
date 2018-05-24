@@ -26,6 +26,7 @@ module.exports = {
         "react/jsx-indent-props": ["error", 4],
         "react/prop-types": "off",
         "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+        "max-len": ["error", {code:120}],
 
     },
 };
