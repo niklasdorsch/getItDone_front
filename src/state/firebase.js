@@ -11,5 +11,12 @@ const config = {
 
 firebase.initializeApp(config);
 
-export const { auth } = firebase;
-export const provider = new firebase.auth.FacebookAuthProvider();
+const provider = new firebase.auth.FacebookAuthProvider();
+provider.addScope('user_birthday');
+
+const { auth } = firebase;
+
+module.exports = {
+    provider,
+    auth,
+};

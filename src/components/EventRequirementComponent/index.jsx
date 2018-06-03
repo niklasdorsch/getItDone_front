@@ -6,9 +6,7 @@ const EventRequirementComponent = class extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: 'item',
             isContributing: false,
-            badInput: 'Bad error',
         };
     }
 
@@ -22,19 +20,14 @@ const EventRequirementComponent = class extends Component {
             <div className="columns">
                 <div className="column">
                     <ProgressBar
-                        current={5}
-                        total={10}
-                        name="Sheep"
-                        isContributing={this.state.isContributing}
-                        description="We need these to look fluffy"
+                        {...this.props}
                         toggleContribute={this.toggleContribute}
                     />
                 </div>
                 {this.state.isContributing ? (
                     <ContributeCard
+                        {...this.props}
                         toggleContribute={this.toggleContribute}
-                        error="Some error"
-                        name="Sheep"
                     />
                 ) : (
                     null

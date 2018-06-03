@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 
 
+const toPercentString = (numerator, denominator) => String(Math.ceil((numerator / denominator) * 100));
+
+
 const ProgressBar = class extends Component {
     toggleContribute = () => {
         this.props.toggleContribute();
     }
 
     render() {
-        const percentString = String(Math.ceil((this.props.current / this.props.total) * 100));
+        console.log(this.props);
         return (
             <div className="box">
                 <div className="level">
@@ -43,11 +46,19 @@ const ProgressBar = class extends Component {
                                 <div className="is-grey">
                                     <b>{this.props.current}/{this.props.total}</b> - Total
                                 </div>
-                                <progress className="progress is-success" value={percentString} max="100" />
+                                <progress
+                                    className="progress is-success"
+                                    value={toPercentString(this.props.current, this.props.total)}
+                                    max="100"
+                                />
                                 <div className="is-grey">
-                                    <b>1/{this.props.total}</b> - Your contribution
+                                    <b>{this.props.userTotal}/{this.props.total}</b> - Your contribution
                                 </div>
-                                <progress className="progress is-warning" value="10" max="100" />
+                                <progress
+                                    className="progress is-warning"
+                                    value={toPercentString(this.props.userTotal, this.props.total)}
+                                    max="100"
+                                />
                             </div>
                         </div>
                     </div>

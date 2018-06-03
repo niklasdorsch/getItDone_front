@@ -27,6 +27,9 @@ module.exports = {
         "react/prop-types": "off",
         "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
         "max-len": ["error", {code:120}],
+        "jsx-a11y/anchor-is-valid": [ "error", {
+            "specialLink": [ "Link"],
+        }],
 
     },
 };
