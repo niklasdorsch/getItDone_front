@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux';
-import { ACTION, ADD_USER_INFO, LOGOUT_USER, RECEIVING_CURRENT_EVENT_INFO } from './actions';
+import {
+    ACTION, ADD_USER_INFO, LOGOUT_USER, RECEIVING_CURRENT_EVENT_INFO,
+    RECEIVING_ALL_EVENTS,
+} from './actions';
 
 const defaultSampleState = {
     user: '1',
@@ -44,8 +47,20 @@ function requirements(state = defaultRequirementsState, action) {
     }
 }
 
+
+const defaultEventDashState = {};
+function eventDash(state = defaultEventDashState, action) {
+    switch (action.type) {
+    case RECEIVING_ALL_EVENTS:
+        return Object.assign({}, state, { events: action.info });
+    default:
+        return state;
+    }
+}
+
+
 const todoApp = combineReducers({
-    sample, user, requirements,
+    sample, user, requirements, eventDash,
 });
 
 export default todoApp;

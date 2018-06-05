@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
 import { addUserInfo } from '../state/actions';
-import { auth, provider } from '../state/firebase';
+import { auth, provider, getToken } from '../state/firebase';
 
 import FacebookButton from './FacebookButton';
 
@@ -27,6 +27,7 @@ const LoginComponent = class extends Component {
                 this.props.history.push(LANDING);
                 console.log('in then of signin function');
                 console.log(result1);
+                getToken();
                 return result1;
             });
         this.props.addUserInfo(result);

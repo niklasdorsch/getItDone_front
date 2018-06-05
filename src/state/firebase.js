@@ -1,4 +1,5 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 const config = {
     apiKey: 'AIzaSyBHvOMKE7BJEw7ru_0vBxtweBn640F2Wf8',
@@ -16,7 +17,18 @@ provider.addScope('user_birthday');
 
 const { auth } = firebase;
 
+
+const getToken = () => {
+    firebase.auth().currentUser.getIdToken(true).then((idToken) => {
+        // Send token to backend here to verify.
+        console.log(idToken);
+    }).catch((error) => {
+        console.log(error);
+    });
+};
+
 module.exports = {
     provider,
     auth,
+    getToken,
 };

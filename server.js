@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const config = require('./webpack.config.js');
+const config = require('./webpack.dev.js');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 

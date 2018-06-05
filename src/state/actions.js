@@ -30,6 +30,30 @@ export function getEventInformation(eventID) {
     };
 }
 
+export const RECEIVING_ALL_EVENTS = 'RECEIVING_ALL_EVENTS';
+function receiveAllEvents(info) {
+    return { type: RECEIVING_ALL_EVENTS, info };
+}
+
+export function getAllEvents() {
+    return function (dispatch) {
+        dispatch(sendEventInformation());
+        return fetch('https://getitdone-api.herokuapp.com/getAllevents', {
+            mode: 'cors',
+            method: 'GET',
+        })
+        // !!! Do not use catch !!! Catch would cause error, if error only log it
+            .then(
+                response => response.json(),
+                error => console.log('An error occurred.', error),
+            ).then(resultJSON => {
+                console.log(resultJSON);
+                console.log(typeof resultJSON);
+                return dispatch(receiveAllEvents(resultJSON.events.map(e => JSON.parse(e))));
+            });
+    };
+}
+
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export function addUserInfo(info) {
     return {

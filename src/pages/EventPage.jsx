@@ -41,7 +41,7 @@ const EventPage = class extends Component {
                         </p>
                         {Object.entries(this.props.currentEvent.requirements).map(([key, value]) => {
                             console.log(value);
-                            return(
+                            return (
                                 <div key={key}>
                                     <EventRequirementComponent
                                         current={value.numCurrent}
@@ -51,7 +51,8 @@ const EventPage = class extends Component {
                                         description={value.description}
                                     />
                                 </div>
-                            )})}
+                            );
+                        })}
                     </div>
                 </section>
             </div>

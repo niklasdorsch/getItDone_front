@@ -18,7 +18,14 @@ const loggerMiddleware = createLogger({
 });
 
 const stateLoader = StateLoader();
-const store = createStore(todoApp, stateLoader.loadState(), applyMiddleware(thunk, loggerMiddleware));
+
+let middleware = [thunk];
+if (process.env.NODE_ENV !== 'production') {
+    middleware = [...middleware, loggerMiddleware];
+}
+
+
+const store = createStore(todoApp, stateLoader.loadState(), applyMiddleware(...middleware));
 store.subscribe(() => {
     stateLoader.saveState(store.getState());
 });
