@@ -26,8 +26,24 @@ export function getEventInformation(eventID) {
             .then(
                 response => response.json(),
                 error => console.log('An error occurred.', error),
-            ).then(resultJSON => dispatch(receiveEventInformation(JSON.parse(resultJSON))));
+            ).then(resultJSON => {
+                console.log(resultJSON);
+                dispatch(receiveEventInformation(resultJSON))
+            });
     };
+}
+
+
+export function submitNewEvent(eventInformation) {
+    return function (dispatch) {
+        console.log(eventInformation);
+    };
+}
+
+
+export const CLEAR_CURRENT_EVENT = 'CLEAR_CURRENT_EVENT';
+export function clearCurrentEvent() {
+    return { type: CLEAR_CURRENT_EVENT };
 }
 
 export const RECEIVING_ALL_EVENTS = 'RECEIVING_ALL_EVENTS';
@@ -47,8 +63,6 @@ export function getAllEvents() {
                 response => response.json(),
                 error => console.log('An error occurred.', error),
             ).then(resultJSON => {
-                console.log(resultJSON);
-                console.log(typeof resultJSON);
                 return dispatch(receiveAllEvents(resultJSON.events.map(e => JSON.parse(e))));
             });
     };

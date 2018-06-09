@@ -18,6 +18,7 @@ const EventMetadataContainer = class extends Component {
             date,
             description,
             owners,
+            location,
         } = this.props.currentEvent;
 
         return (
@@ -29,14 +30,24 @@ const EventMetadataContainer = class extends Component {
                     <p className="subtitle has-text-grey is-3">
                         <MomentComponent timestamp={date} />
                     </p>
+                    <p className="subtitle has-text-grey is-3">
+                        {location}
+                    </p>
                 </div>
                 <br />
                 <div className="container">
                     <p className="subtitle has-text-grey-dark is-5">
                         <span>
                             Organzied by&nbsp;
-                            {Object.entries(owners).map(([key, value]) =>
-                                <a key={key} href={getUserPageURL(key)}>{value.name}&nbsp;</a>)}
+                            {
+                                owners.map(owner => (
+                                    <a
+                                        key={owner.userid}
+                                        href={getUserPageURL(owner.userid)}
+                                    >
+                                        {owner.name}&nbsp;
+                                    </a>))
+                            }
                         </span>
                     </p>
                     <div className="container">

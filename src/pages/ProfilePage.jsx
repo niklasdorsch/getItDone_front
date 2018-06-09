@@ -16,7 +16,7 @@ const EventPage = class extends Component {
     render() {
         return (
             <div>
-                <LogoutButton/>
+                <LogoutButton />
             </div>
         );
     }

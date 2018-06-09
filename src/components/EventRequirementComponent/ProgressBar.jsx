@@ -10,7 +10,6 @@ const ProgressBar = class extends Component {
     }
 
     render() {
-        console.log(this.props);
         return (
             <div className="box">
                 <div className="level">

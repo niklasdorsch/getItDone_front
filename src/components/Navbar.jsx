@@ -9,7 +9,7 @@ const Navbar = () => (
         <div className="hero-body">
             <nav className="level">
                 <p className="level-item has-text-centered">
-                    <Link href="#" to={routes.LANDING} className="link is-info is-size-4">Create Event</Link>
+                    <Link href="#" to={routes.CREATE_EVENT} className="link is-info is-size-4">Create Event</Link>
 
                 </p>
                 <p className="level-item has-text-centered">
@@ -18,10 +18,12 @@ const Navbar = () => (
                     </Link>
                 </p>
                 <p className="level-item has-text-centered">
-                    <img src={Logo} alt="" style={{ height: '5rem' }} />
+                    <Link href="#" to={routes.LANDING} className="link is-info is-size-4">
+                        <img src={Logo} alt="" style={{ height: '5rem' }} />
+                    </Link>
                 </p>
                 <p className="level-item has-text-centered">
-                    <Link href="#" to={routes.EVENT_PAGE} className="link is-info is-size-4">My Events</Link>
+                    <Link href="#" to={routes.USER_EVENT_LIST} className="link is-info is-size-4">My Events</Link>
                 </p>
                 <p className="level-item has-text-centered">
                     <Link href="#" to={routes.PROFILE} className="link is-info is-size-4">My Profile</Link>

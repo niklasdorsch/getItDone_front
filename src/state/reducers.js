@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import {
     ACTION, ADD_USER_INFO, LOGOUT_USER, RECEIVING_CURRENT_EVENT_INFO,
-    RECEIVING_ALL_EVENTS,
+    SENDING_CURRENT_EVENT_INFO,
+    RECEIVING_ALL_EVENTS, CLEAR_CURRENT_EVENT,
 } from './actions';
 
 const defaultSampleState = {
@@ -13,8 +14,12 @@ function sample(state = defaultSampleState, action) {
     switch (action.type) {
     case ACTION:
         return Object.assign({}, state, { user: `${state.user}+1` });
+    case SENDING_CURRENT_EVENT_INFO:
+        return Object.assign({}, state, { currentEvent: action.info, eventIsLoading: true });
     case RECEIVING_CURRENT_EVENT_INFO:
-        return Object.assign({}, state, { currentEvent: action.info });
+        return Object.assign({}, state, { currentEvent: action.info, eventIsLoading: false });
+    case CLEAR_CURRENT_EVENT:
+        return Object.assign({}, state, { currentEvent: null });
 
     default:
         return state;
@@ -40,8 +45,6 @@ const defaultRequirementsState = {};
 
 function requirements(state = defaultRequirementsState, action) {
     switch (action.type) {
-    case RECEIVING_CURRENT_EVENT_INFO:
-        return Object.assign({}, state, action.info.eventRequirments);
     default:
         return state;
     }

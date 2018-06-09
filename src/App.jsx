@@ -17,6 +17,8 @@ import SampleComponent from './components/SampleComponent';
 import LoginComponent from './components/LoginComponent';
 import EventPage from './pages/EventPage';
 import EventListPage from './pages/EventListPage';
+import UserEventListPage from './pages/UserEventListPage';
+import CreateEventPage from './pages/CreateEventPage';
 import ProfilePage from './pages/ProfilePage';
 import Navbar from './components/Navbar';
 import NotFoundPage from './pages/NotFoundPage';
@@ -41,6 +43,8 @@ const App = class extends Component {
                                 <Route exact path={routes.LANDING} component={SampleComponent} />
                                 <Route exact path={routes.EVENT_LIST} component={EventListPage} />
                                 <Route exact path={routes.PROFILE} component={ProfilePage} />
+                                <Route exact path={routes.CREATE_EVENT} component={CreateEventPage} />
+                                <Route exact path={routes.USER_EVENT_LIST} component={UserEventListPage} />
                                 <Route path={routes.EVENT_PAGE} component={EventPage} />
                                 <Route component={NotFoundPage} />
                             </Switch>
