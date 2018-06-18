@@ -1,5 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import { store } from './reduxStore';
+import { addUserInfo } from './actions';
+import { makeFetchMethod } from './api';
 
 const config = {
     apiKey: 'AIzaSyBHvOMKE7BJEw7ru_0vBxtweBn640F2Wf8',
@@ -17,18 +20,43 @@ provider.addScope('user_birthday');
 
 const { auth } = firebase;
 
-
-const getToken = () => {
-    firebase.auth().currentUser.getIdToken(true).then((idToken) => {
-        // Send token to backend here to verify.
-        console.log(idToken);
-    }).catch((error) => {
-        console.log(error);
+const addUser = (uid, name) => {
+    makeFetchMethod({
+        apiPath: `addUser?userID=${uid}&name=${name}`,
+        method: 'POST',
+    }).then((resultJSON) => {
+        console.log(resultJSON);
     });
 };
+
+firebase.auth().onAuthStateChanged(async (user) => {
+    if (user) {
+        const { uid } = user;
+        const token = await user.getIdToken(true)
+            .catch((error) => {
+                console.log(error);
+                throw error;
+            });
+        console.log(uid);
+        console.log(token);
+        store.dispatch(addUserInfo({ token, uid }));
+        addUser(uid, token);
+    }
+});
+
+const loginMethod = () => auth()
+    .signInWithPopup(provider)
+    .then(() => {
+        console.log('Success');
+    })
+    .catch((e) => {
+        throw e;
+    });
 
 module.exports = {
     provider,
     auth,
-    getToken,
+    loginMethod,
+    addUser,
 };
+

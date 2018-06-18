@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import { getAllEvents } from '../state/actions';
+import { getUserEvents } from '../state/actions';
 
 import EventListComponent from '../components/EventListComponent';
 
@@ -17,10 +17,15 @@ const EventListPage = class extends Component {
     }
 
     componentDidMount() {
-        this.props.getAllEvents();
+        this.props.getUserEvents();
     }
 
     render() {
+        if (!Object.keys(this.props.events).length > 0) {
+            return (
+                <div className="title">No events loaded</div>
+            );
+        }
         return (
             <div className="section">
                 <EventListComponent events={this.props.events} />
@@ -38,8 +43,8 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
     return {
-        getAllEvents: () => {
-            dispatch(getAllEvents());
+        getUserEvents: () => {
+            dispatch(getUserEvents());
         },
     };
 };

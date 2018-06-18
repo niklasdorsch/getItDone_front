@@ -3,6 +3,19 @@ import MomentComponent from './MomentComponent';
 
 import { getUserPageURL } from '../state/routes';
 
+const commaHtml = i => <span key={i}>,&nbsp;</span>;
+const andHtml = i => <span key={i}>&nbsp;and&nbsp;</span>;
+const htmlArrayToAccumilationStyle = (htmlArray) => {
+    if (htmlArray.length < 2) {
+        return htmlArray;
+    }
+    let newArray = [htmlArray[0]];
+    for (let i = 1; i < htmlArray.length - 1; i += 1) {
+        newArray = newArray.concat([commaHtml(i), htmlArray[i]]);
+    }
+    newArray = newArray.concat([andHtml(htmlArray.length - 1), htmlArray[htmlArray.length - 1]]);
+    return newArray;
+};
 
 const EventMetadataContainer = class extends Component {
     constructor(props) {
@@ -19,11 +32,15 @@ const EventMetadataContainer = class extends Component {
             description,
             owners,
             location,
+            isprivate,
         } = this.props.currentEvent;
 
         return (
             <div>
                 <div className="container">
+                    <p className="subtitle has-text-grey is-6">
+                        {(isprivate) ? 'Private event' : 'Public event'}
+                    </p>
                     <p className="title is-1">
                         {name}
                     </p>
@@ -40,13 +57,13 @@ const EventMetadataContainer = class extends Component {
                         <span>
                             Organzied by&nbsp;
                             {
-                                owners.map(owner => (
+                                htmlArrayToAccumilationStyle(owners.map(owner => (
                                     <a
                                         key={owner.userid}
                                         href={getUserPageURL(owner.userid)}
                                     >
-                                        {owner.name}&nbsp;
-                                    </a>))
+                                        {owner.name}
+                                    </a>)))
                             }
                         </span>
                     </p>

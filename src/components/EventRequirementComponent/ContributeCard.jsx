@@ -2,26 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { submitNewContribution } from '../../state/actions';
 
-const mapStateToProps = function (state) {
-    return {
-        error: state.sample.user,
-        inputValue: 1,
-    };
-};
-
-const mapDispatchToProps = function (dispatch) {
-    return {
-        submitNewContribution: () => {
-            dispatch(submitNewContribution());
-        },
-    };
-};
-
 const ProgressBar = class extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
             inputValue: 1,
         };
     }
@@ -71,6 +55,20 @@ const ProgressBar = class extends Component {
         );
     }
 };
+
+const mapStateToProps = function (state) {
+    return {
+    };
+};
+
+const mapDispatchToProps = function (dispatch) {
+    return {
+        submitNewContribution: () => {
+            dispatch(submitNewContribution());
+        },
+    };
+};
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProgressBar);
 

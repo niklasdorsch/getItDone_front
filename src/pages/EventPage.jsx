@@ -5,13 +5,13 @@ import { compose } from 'recompose';
 
 import EventRequirementComponent from '../components/EventRequirementComponent';
 import EventMetadataContainer from '../components/EventMetadataContainer';
+import MessageComponent from '../components/MessageComponent';
 
 import { getEventInformation, clearCurrentEvent } from '../state/actions';
 
 const EventPage = class extends Component {
     constructor(props) {
         super(props);
-        this.props.clearCurrentEvent();
         this.state = {
             item: 'sa',
         };
@@ -21,25 +21,23 @@ const EventPage = class extends Component {
         this.props.getEventInformation(this.props.match.params.eventid);
     }
 
+    componentWillUnmount() {
+        this.props.clearCurrentEvent();
+    }
+
     render() {
         if (this.props.isLoading) {
             return (
-                <div className="section">
-                    <p className="title is-1">
-                        Loading...
-                    </p>
-                </div>
+                <MessageComponent message="Loading..." />
             );
         }
-        if (!this.props.currentEvent) {
+        if (!this.props.currentEvent || this.props.currentEvent.error) {
             return (
-                <div className="section">
-                    <p className="title is-1">
-                        Event not found.
-                    </p>
-                </div>
+                <MessageComponent message="Event not found." />
             );
         }
+        const { requirements } = this.props.currentEvent;
+
         return (
             <div>
                 <section className="section">
@@ -49,17 +47,21 @@ const EventPage = class extends Component {
                         <p className="title is-4">
                             What needs to get done
                         </p>
-                        {this.props.currentEvent.requirements.map(requirement => (
-                            <div key={requirement.requirementid}>
-                                <EventRequirementComponent
-                                    current={requirement.current}
-                                    total={requirement.total}
-                                    userTotal={requirement.user}
-                                    name={requirement.name}
-                                    description={requirement.description}
-                                />
-                            </div>
-                        ))}
+                        {(requirements && Object.keys(requirements).length > 0)
+                            ?
+                            this.props.currentEvent.requirements.map(requirement => (
+                                <div key={requirement.requirementid}>
+                                    <EventRequirementComponent
+                                        current={requirement.current}
+                                        total={requirement.total}
+                                        userTotal={requirement.user}
+                                        name={requirement.name}
+                                        description={requirement.description}
+                                    />
+                                </div>
+                            ))
+                            : null
+                        }
                     </div>
                 </section>
             </div>
@@ -69,8 +71,8 @@ const EventPage = class extends Component {
 
 const mapStateToProps = function (state) {
     return {
-        currentEvent: state.sample.currentEvent,
-        isLoading: state.sample.eventIsLoading,
+        currentEvent: state.event.currentEvent,
+        isLoading: state.event.eventIsLoading,
     };
 };
 

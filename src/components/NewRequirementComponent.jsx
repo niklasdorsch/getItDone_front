@@ -2,21 +2,18 @@ import React, { Component } from 'react';
 
 
 const NewRequirementComponent = class extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: 'sa',
-            number: null,
-        };
-    }
-
-    componentDidMount() {
-    }
-
     handleNameChange = (event) => {
         this.props.updateRequirement({
             id: this.props.id,
             item: 'name',
+            value: event.target.value,
+        });
+    }
+
+    handleDescriptionChange = (event) => {
+        this.props.updateRequirement({
+            id: this.props.id,
+            item: 'description',
             value: event.target.value,
         });
     }
@@ -35,51 +32,76 @@ const NewRequirementComponent = class extends Component {
             <div className="box">
                 <div className="columns">
                     <div className="column">
+                        <div className="columns">
+                            <div className="column">
+                                <div className="field">
+                                    <label
+                                        className="label"
+                                        htmlFor={`${this.props.id}-requirement-name-input`}
+                                    >
+                                        Name
+                                    </label>
+                                    <div className="control">
+                                        <input
+                                            className="input"
+                                            id={`${this.props.id}-requirement-name-input`}
+                                            type="text"
+                                            placeholder="Text input"
+                                            onChange={this.handleNameChange}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="column">
+                                <div className="field">
+                                    <label
+                                        className="label"
+                                        htmlFor={`${this.props.id}-requirement-number-input`}
+                                    >
+                                        Number needed
+                                    </label>
+                                    <div className="control">
+                                        <input
+                                            className="input"
+                                            id={`${this.props.id}-requirement-number-input`}
+                                            type="text"
+                                            placeholder="Text input"
+                                            onChange={this.handleNumberChange}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="field">
                             <label
                                 className="label"
-                                htmlFor={`${this.props.id}-requirement-name-input`}
+                                htmlFor={`${this.props.id}-requirement-description-input`}
                             >
-                                Name
+                                Description
                             </label>
                             <div className="control">
                                 <input
                                     className="input"
-                                    id={`${this.props.id}-requirement-name-input`}
+                                    id={`${this.props.id}-requirement-description-input`}
                                     type="text"
                                     placeholder="Text input"
-                                    onChange={this.handleNameChange}
+                                    onChange={this.handleDescriptionChange}
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className="column">
-                        <div className="field">
-                            <label
-                                className="label"
-                                htmlFor={`${this.props.id}-requirement-number-input`}
+                    {(this.props.canRemove) ?
+                        <div className="column is-1">
+                            <button
+                                className="button is-danger is-2 is-offset-10"
+                                onClick={this.props.removeMethod}
                             >
-                                Number needed
-                            </label>
-                            <div className="control">
-                                <input
-                                    className="input"
-                                    id={`${this.props.id}-requirement-number-input`}
-                                    type="text"
-                                    placeholder="Text input"
-                                    onChange={this.handleNumberChange}
-                                />
-                            </div>
+                                Remove
+                            </button>
                         </div>
-                    </div>
-                    <div className="column is-1">
-                        <button
-                            className="button is-danger is-2 is-offset-10"
-                            onClick={this.props.removeMethod}
-                        >
-                            Remove
-                        </button>
-                    </div>
+                        :
+                        null
+                    }
                 </div>
             </div>
         );

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import { logoutUser } from '../state/actions';
+import { logoutUser, loginUser } from '../state/actions';
 
 import { LANDING } from '../state/routes';
 
@@ -35,6 +35,9 @@ const mapDispatchToProps = function (dispatch) {
     return {
         logoutUser: (...args) => {
             dispatch(logoutUser(...args));
+        },
+        loginUser: (...args) => {
+            dispatch(loginUser(...args));
         },
     };
 };

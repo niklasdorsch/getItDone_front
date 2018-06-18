@@ -22,7 +22,7 @@ const CreateEventPage = class extends Component {
             location: '',
             description: '',
             requirements: {},
-            privacy: 'public',
+            isPrivate: true,
             errorMessages: [],
         };
     }
@@ -38,8 +38,6 @@ const CreateEventPage = class extends Component {
     }
 
     handleDateTimeChange = (datetime) => {
-        console.log(datetime);
-        console.log(moment.isMoment(datetime));
         this.setState({ datetime });
     }
 
@@ -52,14 +50,20 @@ const CreateEventPage = class extends Component {
     }
 
     handlePrivacyRadioButtons = (event) => {
-        this.setState({ privacy: event.target.value });
+        console.log(event.target.value);
+        this.setState({ isPrivate: event.target.value });
     }
 
     handleAddRequirement = () => {
         this.addRequirement();
     };
 
-    addRequirement = ({ id, name = '', number = '' } = {}) => {
+    addRequirement = ({
+        id,
+        name = '',
+        number = '',
+        description = '',
+    } = {}) => {
         this.setState((previousState) => {
             let newID = id;
             if (newID == null) {
@@ -73,6 +77,7 @@ const CreateEventPage = class extends Component {
             newRequirements[newID] = {
                 name,
                 number,
+                description,
             };
             return {
                 requirements: newRequirements,
@@ -149,7 +154,6 @@ const CreateEventPage = class extends Component {
 
 
     render() {
-        console.log(this.inputIsValid());
         const requirementsHolder = Object.entries(this.state.requirements).map(([key, value]) => (
             <NewRequirementComponent
                 key={key}
@@ -158,6 +162,7 @@ const CreateEventPage = class extends Component {
                 number={value.number}
                 updateRequirement={this.updateRequirement}
                 removeMethod={this.removeRequirement(key)}
+                canRemove={Object.keys(this.state.requirements).length > 1}
             />
         ));
         let errorMessage = null;
@@ -176,13 +181,14 @@ const CreateEventPage = class extends Component {
             );
         }
 
+            console.log(this.state);
         return (
             <div className="section">
-                <container className="container">
+                <div className="container">
                     <div className="title is-2">Create event</div>
-                </container>
+                </div>
                 <br />
-                <container className="container">
+                <div className="container">
                     <div className="title is-3">Information</div>
                     <div className="field">
                         <div className="control">
@@ -191,8 +197,8 @@ const CreateEventPage = class extends Component {
                                     type="radio"
                                     name="question"
                                     value="public"
-                                    onChange={this.handlePrivacyRadioButtons}
-                                    checked={this.state.privacy === 'public'}
+                                    onClick={this.handlePrivacyRadioButtons}
+                                    checked={!this.state.isPrivate}
                                 />
                                 Public
                             </label>
@@ -201,8 +207,8 @@ const CreateEventPage = class extends Component {
                                     type="radio"
                                     name="question"
                                     value="private"
-                                    onChange={this.handlePrivacyRadioButtons}
-                                    checked={this.state.privacy === 'private'}
+                                    onClick={this.handlePrivacyRadioButtons}
+                                    checked={this.state.isPrivate}
                                 />
                                 Private
                             </label>
@@ -255,15 +261,15 @@ const CreateEventPage = class extends Component {
                             />
                         </div>
                     </div>
-                </container>
+                </div>
                 <br />
-                <container className="container">
+                <div className="container">
                     <div className="title is-3">Requirements</div>
                     {requirementsHolder}
-                </container>
+                </div>
                 <br />
                 {errorMessage}
-                <container className="container">
+                <div className="container">
                     <div className="level">
                         <div className="level-left">
                             <button
@@ -282,7 +288,7 @@ const CreateEventPage = class extends Component {
                             </button>
                         </div>
                     </div>
-                </container>    
+                </div>
             </div>
         );
     }
@@ -290,7 +296,6 @@ const CreateEventPage = class extends Component {
 
 const mapStateToProps = function (state) {
     return {
-        currentEvent: state.sample.currentEvent,
     };
 };
 

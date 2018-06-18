@@ -21,7 +21,22 @@ const StateLoader = () => ({
         }
     },
 
+    saveLoginState: (state) => {
+        try {
+            const { user } = state;
+            const serializedState = JSON.stringify({ user });
+
+            localStorage.setItem('reduxState', serializedState);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
 
 });
 
-export default StateLoader;
+const stateLoader = StateLoader();
+
+module.exports = {
+    stateLoader,
+};

@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import { addUserInfo } from '../state/actions';
-import { auth, provider, getToken } from '../state/firebase';
+import { addUserInfo, addUser } from '../state/actions';
+import { loginMethod } from '../state/firebase';
 
 import FacebookButton from './FacebookButton';
 
@@ -18,19 +18,13 @@ const LoginComponent = class extends Component {
     }
 
     async login() {
-        const result = await auth()
-            .signInWithPopup(provider)
+        await loginMethod()
+            .then(() => {
+                this.props.history.push(LANDING);
+            })
             .catch((e) => {
                 console.log(e);
-            })
-            .then((result1) => {
-                this.props.history.push(LANDING);
-                console.log('in then of signin function');
-                console.log(result1);
-                getToken();
-                return result1;
             });
-        this.props.addUserInfo(result);
     }
 
     render() {
@@ -62,6 +56,9 @@ const mapDispatchToProps = function (dispatch) {
     return {
         addUserInfo: (...args) => {
             dispatch(addUserInfo(...args));
+        },
+        addUser: (...args) => {
+            dispatch(addUser(...args));
         },
     };
 };

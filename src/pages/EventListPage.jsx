@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import { getAllEvents } from '../state/actions';
 
 import EventListComponent from '../components/EventListComponent';
+import MessageComponent from '../components/MessageComponent';
 
 
 const EventListPage = class extends Component {
@@ -21,6 +22,16 @@ const EventListPage = class extends Component {
     }
 
     render() {
+        if (this.props.waiting) {
+            return (
+                <MessageComponent message="Waiting to load resources" />
+            );
+        }
+        if (Object.keys(this.props.events).length === 0) {
+            return (
+                <MessageComponent message="Could not load component" submessage="Try reloading" />
+            );
+        }
         return (
             <div className="section">
                 <EventListComponent events={this.props.events} />
@@ -33,6 +44,7 @@ const EventListPage = class extends Component {
 const mapStateToProps = function (state) {
     return {
         events: state.eventDash.events,
+        waiting: state.eventDash.waitingForEvents,
     };
 };
 
