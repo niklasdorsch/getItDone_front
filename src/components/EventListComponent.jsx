@@ -26,7 +26,7 @@ const EventListComponent = class extends Component {
                 </thead>
                 <tbody>
                     {this.props.events.map(event => (
-                        <tr key={event.eventId} className="event-list-row" onClick={this.goToPage(event.eventID)}>
+                        <tr key={event.eventId} className="event-list-row" onClick={this.goToPage(event.eventId)}>
                             <td>{event.name}</td>
                             <td><MomentComponent timestamp={event.eventdate} /></td>
                             <td>{event.location}</td>

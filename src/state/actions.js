@@ -1,6 +1,6 @@
 import { push } from 'react-router-redux';
 import { makeFetchMethod } from './api';
-
+import { requirementsArrayToObject } from '../usefulFunctions';
 
 export const SENDING_CURRENT_EVENT_INFO = 'SENDING_CURRENT_EVENT_INFO';
 export const RECEIVING_CURRENT_EVENT_INFO = 'RECEIVING_CURRENT_EVENT_INFO';
@@ -11,11 +11,7 @@ function sendEventInformation() {
 
 function receiveEventInformation(event) {
     console.log(event);
-    const requirements = event.requirements.reduce((current, item) => {
-        const newObject = Object.assign(current);
-        newObject[item.requirementid] = item;
-        return newObject;
-    }, {});
+    const requirements = requirementsArrayToObject(event.requirements);
     return { type: RECEIVING_CURRENT_EVENT_INFO, event, requirements };
 }
 
@@ -95,6 +91,11 @@ export function submitNewEvent(eventInformation) {
             dispatch(receiveCreateNewEvent(resultJSON));
         });
     };
+}
+
+export function editEvent(eventInformation) {
+    console.log('Implement edit');
+    console.log(eventInformation);
 }
 
 

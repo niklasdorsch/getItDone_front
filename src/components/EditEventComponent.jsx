@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-
 import DateTime from 'react-datetime';
 import moment from 'moment';
-import NewRequirementComponent from '../components/NewRequirementComponent';
+
+import EditRequirementComponent from '../components/EditRequirementComponent';
 
 
 const yesterday = DateTime.moment().subtract(1, 'day');
@@ -12,15 +12,27 @@ const isTodayOrFuture = current => current.isAfter(yesterday);
 const EditEventComponent = class extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            name: '',
-            datetime: '',
-            location: '',
-            description: '',
-            requirements: {},
-            isPrivate: true,
-            errorMessages: [],
-        };
+        if (this.props.initialState) {
+            const { date, requirements, ...args } = this.props.initialState;
+            this.state = {
+                ...args,
+                datetime: moment(date),
+                requirements: this.props.requirements,
+                deletedRequirements: [],
+                errorMessages: [],
+            };
+        } else {
+            this.state = {
+                name: '',
+                datetime: '',
+                location: '',
+                description: '',
+                requirements: {},
+                isPrivate: true,
+                errorMessages: [],
+                deletedRequirements: [],
+            };
+        }
     }
 
     componentDidMount() {
@@ -56,7 +68,7 @@ const EditEventComponent = class extends Component {
     addRequirement = ({
         id,
         name = '',
-        number = '',
+        total = '',
         description = '',
     } = {}) => {
         this.setState((previousState) => {
@@ -71,7 +83,7 @@ const EditEventComponent = class extends Component {
             const newRequirements = Object.assign(previousState.requirements);
             newRequirements[newId] = {
                 name,
-                number,
+                total,
                 description,
             };
             return {
@@ -81,7 +93,6 @@ const EditEventComponent = class extends Component {
     }
 
     handleSubmit = () => {
-        console.log('here');
         const errors = this.inputIsValid();
         if (errors.length > 0) {
             this.setState({
@@ -98,8 +109,11 @@ const EditEventComponent = class extends Component {
     removeRequirement = id => () => this.setState((previousState) => {
         const newRequirements = Object.assign(previousState.requirements);
         delete newRequirements[id];
+        const deletedRequirements = Array.from(previousState.deletedRequirements);
+        deletedRequirements.push(id);
         return {
             requirements: newRequirements,
+            deletedRequirements,
         };
     });
 
@@ -131,16 +145,16 @@ const EditEventComponent = class extends Component {
         let check1 = true;
         let check2 = true;
         Object.entries(this.state.requirements).forEach(([, value]) => {
-            if (check1 && (value.name.length === 0 || value.number.length === 0)) {
-                errors.push('Requirment name and number needed');
+            if (check1 && (value.name.length === 0 || value.total.length === 0)) {
+                errors.push('Requirment name and totalnumber needed');
                 check1 = false;
             }
             const onlyDigits = new RegExp('^\\d+$');
             if (check2
-                && value.number.length > 0
-                && (!onlyDigits.test(value.number) || parseInt(value.number, 10) < 0)
+                && value.total.length > 0
+                && (!onlyDigits.test(value.total) || parseInt(value.total, 10) < 0)
             ) {
-                errors.push('Requirment number should be postive integer');
+                errors.push('Requirment total number should be postive integer');
                 check2 = false;
             }
         });
@@ -150,11 +164,12 @@ const EditEventComponent = class extends Component {
 
     render() {
         const requirementsHolder = Object.entries(this.state.requirements).map(([key, value]) => (
-            <NewRequirementComponent
+            <EditRequirementComponent
                 key={key}
                 id={key}
                 name={value.name}
-                number={value.number}
+                total={value.total}
+                description={value.description}
                 updateRequirement={this.updateRequirement}
                 removeMethod={this.removeRequirement(key)}
                 canRemove={Object.keys(this.state.requirements).length > 1}
@@ -215,6 +230,7 @@ const EditEventComponent = class extends Component {
                                 className="input"
                                 id="event-input"
                                 type="text"
+                                value={this.state.name}
                                 placeholder="Text input"
                                 onChange={this.handleNameChange}
                             />
@@ -225,6 +241,7 @@ const EditEventComponent = class extends Component {
                         <DateTime
                             isValidDate={isTodayOrFuture}
                             onChange={this.handleDateTimeChange}
+                            value={this.state.datetime}
                             inputProps={{
                                 placeholder: 'Pick Date',
                                 className: 'input form-control',
@@ -240,6 +257,7 @@ const EditEventComponent = class extends Component {
                                 id="location-input"
                                 type="text"
                                 placeholder="Text input"
+                                value={this.state.location}
                                 onChange={this.handleLocationChange}
                             />
                         </div>
@@ -251,6 +269,7 @@ const EditEventComponent = class extends Component {
                                 className="textarea"
                                 id="description-textarea"
                                 placeholder="Textarea"
+                                value={this.state.description}
                                 onChange={this.handleDescriptionChange}
                             />
                         </div>

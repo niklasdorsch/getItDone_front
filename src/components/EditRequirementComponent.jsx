@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 
-const NewRequirementComponent = class extends Component {
+const EditRequirementComponent = class extends Component {
     handleNameChange = (event) => {
         this.props.updateRequirement({
             id: this.props.id,
@@ -22,7 +22,7 @@ const NewRequirementComponent = class extends Component {
     handleNumberChange = (event) => {
         this.props.updateRequirement({
             id: this.props.id,
-            item: 'number',
+            item: 'total',
             value: event.target.value,
         });
     }
@@ -47,6 +47,7 @@ const NewRequirementComponent = class extends Component {
                                             id={`${this.props.id}-requirement-name-input`}
                                             type="text"
                                             placeholder="Text input"
+                                            value={this.props.name}
                                             onChange={this.handleNameChange}
                                         />
                                     </div>
@@ -56,16 +57,17 @@ const NewRequirementComponent = class extends Component {
                                 <div className="field">
                                     <label
                                         className="label"
-                                        htmlFor={`${this.props.id}-requirement-number-input`}
+                                        htmlFor={`${this.props.id}-requirement-total-input`}
                                     >
                                         Number needed
                                     </label>
                                     <div className="control">
                                         <input
                                             className="input"
-                                            id={`${this.props.id}-requirement-number-input`}
+                                            id={`${this.props.id}-requirement-total-input`}
                                             type="text"
                                             placeholder="Text input"
+                                            value={this.props.total}
                                             onChange={this.handleNumberChange}
                                         />
                                     </div>
@@ -85,6 +87,7 @@ const NewRequirementComponent = class extends Component {
                                     id={`${this.props.id}-requirement-description-input`}
                                     type="text"
                                     placeholder="Text input"
+                                    value={this.props.description}
                                     onChange={this.handleDescriptionChange}
                                 />
                             </div>
@@ -108,4 +111,4 @@ const NewRequirementComponent = class extends Component {
     }
 };
 
-export default NewRequirementComponent;
+export default EditRequirementComponent;

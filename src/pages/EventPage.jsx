@@ -8,6 +8,7 @@ import EventMetadataContainer from '../components/EventMetadataContainer';
 import MessageComponent from '../components/MessageComponent';
 
 import { getEventInformation, clearCurrentEvent } from '../state/actions';
+import { getEditEventPageURL } from '../state/routes';
 
 const EventPage = class extends Component {
     constructor(props) {
@@ -22,7 +23,11 @@ const EventPage = class extends Component {
     }
 
     componentWillUnmount() {
-        this.props.clearCurrentEvent();
+        // this.props.clearCurrentEvent();
+    }
+
+    handleEdit = () => {
+        this.props.history.push(getEditEventPageURL(this.props.match.params.eventid));
     }
 
     render() {
@@ -41,6 +46,18 @@ const EventPage = class extends Component {
         return (
             <div>
                 <section className="section">
+                    <div className="level">
+                        <div className="level-left" />
+                        <div className="level-right">
+                            <p className="level-item">
+                                <button className="button is-warning" onClick={this.handleEdit}>Edit</button>
+                            </p>
+                            <p className="level-item">
+                                <button className="button is-danger">Delete</button>
+                            </p>
+                        </div>
+
+                    </div>
                     <EventMetadataContainer currentEvent={this.props.currentEvent} />
                     <br />
                     <div className="container">

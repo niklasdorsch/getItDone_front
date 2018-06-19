@@ -32,14 +32,14 @@ const EventMetadataContainer = class extends Component {
             description,
             owners,
             location,
-            isprivate,
+            isPrivate,
         } = this.props.currentEvent;
 
         return (
             <div>
                 <div className="container">
                     <p className="subtitle has-text-grey is-6">
-                        {(isprivate) ? 'Private event' : 'Public event'}
+                        {(isPrivate) ? 'Private event' : 'Public event'}
                     </p>
                     <p className="title is-1">
                         {name}

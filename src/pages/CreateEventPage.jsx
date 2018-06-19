@@ -40,6 +40,6 @@ const mapDispatchToProps = function (dispatch) {
 };
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(null, mapDispatchToProps),
     withRouter,
 )(CreateEventPage);
