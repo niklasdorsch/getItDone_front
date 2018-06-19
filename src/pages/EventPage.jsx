@@ -36,7 +36,7 @@ const EventPage = class extends Component {
                 <MessageComponent message="Event not found." />
             );
         }
-        const { requirements } = this.props.currentEvent;
+        const { requirements } = this.props;
 
         return (
             <div>
@@ -49,9 +49,10 @@ const EventPage = class extends Component {
                         </p>
                         {(requirements && Object.keys(requirements).length > 0)
                             ?
-                            this.props.currentEvent.requirements.map(requirement => (
+                            Object.entries(requirements).map(([id, requirement]) => (
                                 <div key={requirement.requirementid}>
                                     <EventRequirementComponent
+                                        id={id}
                                         current={requirement.current}
                                         total={requirement.total}
                                         userTotal={requirement.user}
@@ -72,6 +73,7 @@ const EventPage = class extends Component {
 const mapStateToProps = function (state) {
     return {
         currentEvent: state.event.currentEvent,
+        requirements: state.event.requirements,
         isLoading: state.event.eventIsLoading,
     };
 };

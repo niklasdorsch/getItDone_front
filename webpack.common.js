@@ -5,7 +5,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        app: ['babel-polyfill', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
+        app: ['babel-polyfill', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true',
             './src/index.jsx'],
         vendor: [
             'react',

@@ -34,6 +34,7 @@ const EventListPage = class extends Component {
         }
         return (
             <div className="section">
+            
                 <EventListComponent events={this.props.events} />
             </div>
         );

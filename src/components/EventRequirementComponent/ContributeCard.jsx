@@ -11,7 +11,10 @@ const ProgressBar = class extends Component {
     }
 
     submitNewContribution = () => {
-        this.props.submitNewContribution();
+        this.props.submitNewContribution({
+            requirementId: this.props.id,
+            amount: this.state.inputValue,
+        });
         this.props.toggleContribute();
     }
 
@@ -63,8 +66,8 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
     return {
-        submitNewContribution: () => {
-            dispatch(submitNewContribution());
+        submitNewContribution: (...args) => {
+            dispatch(submitNewContribution(...args));
         },
     };
 };

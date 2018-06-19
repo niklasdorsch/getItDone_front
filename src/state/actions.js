@@ -9,15 +9,21 @@ function sendEventInformation() {
     return { type: SENDING_CURRENT_EVENT_INFO };
 }
 
-function receiveEventInformation(info) {
-    return { type: RECEIVING_CURRENT_EVENT_INFO, info };
+function receiveEventInformation(event) {
+    console.log(event);
+    const requirements = event.requirements.reduce((current, item) => {
+        const newObject = Object.assign(current);
+        newObject[item.requirementid] = item;
+        return newObject;
+    }, {});
+    return { type: RECEIVING_CURRENT_EVENT_INFO, event, requirements };
 }
 
-export function getEventInformation(eventID) {
+export function getEventInformation(eventId) {
     return function (dispatch) {
-        dispatch(sendEventInformation(eventID));
+        dispatch(sendEventInformation(eventId));
         return makeFetchMethod({
-            apiPath: `getEventInfo?eventID=${eventID}`,
+            apiPath: `getEventInfo?eventId=${eventId}`,
             method: 'GET',
         }).then(resultJSON => dispatch(receiveEventInformation(resultJSON)))
             .catch(e => dispatch(receiveEventInformation({
@@ -36,7 +42,7 @@ function sendCreateNewEvent() {
 function receiveCreateNewEvent(info) {
     return {
         type: RECEIVING_CREATE_NEW_EVENT,
-        eventID: info.id,
+        eventId: info.id,
     };
 }
 
@@ -66,14 +72,14 @@ export function submitNewEvent(eventInformation) {
         });
 
         const bodyObject = {
-            eventID: 0,
+            eventId: 0,
             datetime: datetime.format('YYYY-MM-DD HH:mm:ss'),
             name,
             description,
             location,
             requirements,
             isPrivate,
-            userID: getState().user.uid,
+            userId: getState().user.uid,
         };
 
         dispatch(sendCreateNewEvent());
@@ -103,8 +109,8 @@ function sendAllEvents(info) {
 }
 
 export const RECEIVING_ALL_EVENTS = 'RECEIVING_ALL_EVENTS';
-function receiveAllEvents(info) {
-    return { type: RECEIVING_ALL_EVENTS, info };
+function receiveAllEvents({ events }) {
+    return { type: RECEIVING_ALL_EVENTS, events };
 }
 
 export function getAllEvents() {
@@ -114,8 +120,8 @@ export function getAllEvents() {
             apiPath: 'getAllEvents',
             method: 'GET',
         }).then((resultJSON) => {
-            console.log(resultJSON);
-            return dispatch(receiveAllEvents(resultJSON));
+            const { events } = resultJSON;
+            return dispatch(receiveAllEvents({ events }));
         });
     };
 }
@@ -141,9 +147,30 @@ export function logoutUser() {
     return { type: LOGOUT_USER };
 }
 
-export function submitNewContribution() {
+export const SENDING_REQUIREMENT_CONTRIBUTION = 'SENDING_REQUIREMENT_CONTRIBUTION';
+function sendRequirementContribution(info) {
+    return { type: SENDING_REQUIREMENT_CONTRIBUTION, info };
+}
+
+export const RECEIVING_REQUIREMENT_CONTRIBUTION = 'RECEIVING_REQUIREMENT_CONTRIBUTION';
+function receiveRequirementContribution({ requirementId, amount }) {
+    return { type: RECEIVING_REQUIREMENT_CONTRIBUTION, requirementId, amount };
+}
+
+export function submitNewContribution({ requirementId, amount }) {
     return function (dispatch, getState) {
-        console.log(getState().user.userInfo.user.uid);
-        console.log('Implement submit new contribution');
+        dispatch(sendRequirementContribution());
+        const bodyObject = {
+            requirementId,
+            amount,
+            userId: getState().user.uid,
+        };
+        return makeFetchMethod({
+            apiPath: 'editRequirement',
+            method: 'PUT',
+            body: bodyObject,
+        }).then((resultJSON) => {
+            dispatch(receiveRequirementContribution(resultJSON));
+        });
     };
 }

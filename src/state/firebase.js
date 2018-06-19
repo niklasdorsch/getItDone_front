@@ -22,7 +22,7 @@ const { auth } = firebase;
 
 const addUser = (uid, name) => {
     makeFetchMethod({
-        apiPath: `addUser?userID=${uid}&name=${name}`,
+        apiPath: `addUser?userId=${uid}&name=${name}`,
         method: 'POST',
     }).then((resultJSON) => {
         console.log(resultJSON);
@@ -37,8 +37,6 @@ firebase.auth().onAuthStateChanged(async (user) => {
                 console.log(error);
                 throw error;
             });
-        console.log(uid);
-        console.log(token);
         store.dispatch(addUserInfo({ token, uid }));
         addUser(uid, token);
     }

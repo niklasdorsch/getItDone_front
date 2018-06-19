@@ -5,6 +5,7 @@ import {
     RECEIVING_CURRENT_EVENT_INFO,
     SENDING_CURRENT_EVENT_INFO,
     RECEIVING_ALL_EVENTS, SEND_ALL_EVENTS, CLEAR_CURRENT_EVENT,
+    RECEIVING_REQUIREMENT_CONTRIBUTION,
 } from './actions';
 
 const defaultEventState = {
@@ -12,14 +13,37 @@ const defaultEventState = {
     eventIsLoading: true,
 };
 
+const updateUserContribution = (state, action) => {
+    const { requirementId, amount } = action;
+    const { [requirementId]: thisRequirement, ...otherRequirements } = state.requirements;
+    const { current, user: userAmount, ...rest } = thisRequirement;
+    const newCurrent = current + (amount - userAmount);
+    return {
+        requirements: {
+            [requirementId]: {
+                current: newCurrent,
+                user: amount,
+                ...rest,
+            },
+            ...otherRequirements,
+        },
+    };
+};
+
 function event(state = defaultEventState, action) {
     switch (action.type) {
     case SENDING_CURRENT_EVENT_INFO:
         return Object.assign({}, state, { currentEvent: action.info, eventIsLoading: true });
     case RECEIVING_CURRENT_EVENT_INFO:
-        return Object.assign({}, state, { currentEvent: action.info, eventIsLoading: false });
+        return Object.assign({}, state, {
+            currentEvent: action.event,
+            requirements: action.requirements,
+            eventIsLoading: false,
+        });
     case CLEAR_CURRENT_EVENT:
         return Object.assign({}, state, { currentEvent: null, eventIsLoading: true });
+    case RECEIVING_REQUIREMENT_CONTRIBUTION:
+        return Object.assign({}, state, updateUserContribution(state, action));
     default:
         return state;
     }
@@ -59,7 +83,7 @@ function eventDash(state = defaultEventDashState, action) {
     case SEND_ALL_EVENTS:
         return Object.assign({}, state, { waitingForEvents: true });
     case RECEIVING_ALL_EVENTS:
-        return Object.assign({}, state, { events: action.info.events, waitingForEvents: false });
+        return Object.assign({}, state, { events: action.events, waitingForEvents: false });
     default:
         return state;
     }
