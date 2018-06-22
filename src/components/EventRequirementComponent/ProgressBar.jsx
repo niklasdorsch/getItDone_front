@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 
+import RequirementDetailsDropdown from './RequirementDetailsDropdown';
 
 const toPercentString = (numerator, denominator) => String(Math.ceil((numerator / denominator) * 100));
 
 
 const ProgressBar = class extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            detailsToggled: false,
+        };
+    }
+
     toggleContribute = () => {
         this.props.toggleContribute();
     }
@@ -62,6 +70,7 @@ const ProgressBar = class extends Component {
                         </div>
                     </div>
                 </article>
+                <RequirementDetailsDropdown {...this.props} />
             </div>
         );
     }

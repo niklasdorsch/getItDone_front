@@ -7,6 +7,10 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = merge(common, {
+    entry: {
+        app: ['babel-polyfill',
+            './src/index.jsx'],
+    },
     devtool: 'source-map',
     plugins: [
 
@@ -17,6 +21,8 @@ module.exports = merge(common, {
             sourceMap: true,
         }),
         new BundleAnalyzerPlugin(),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+
     ],
     optimization: {
         splitChunks: {

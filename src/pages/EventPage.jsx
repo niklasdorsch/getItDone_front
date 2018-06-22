@@ -7,7 +7,7 @@ import EventRequirementComponent from '../components/EventRequirementComponent';
 import EventMetadataContainer from '../components/EventMetadataContainer';
 import MessageComponent from '../components/MessageComponent';
 
-import { getEventInformation, clearCurrentEvent } from '../state/actions';
+import { getEventInformation, clearCurrentEvent, deleteEvent } from '../state/actions';
 import { getEditEventPageURL } from '../state/routes';
 
 const EventPage = class extends Component {
@@ -30,6 +30,10 @@ const EventPage = class extends Component {
         this.props.history.push(getEditEventPageURL(this.props.match.params.eventid));
     }
 
+    handleDelete = () => {
+        this.props.deleteEvent(this.props.match.params.eventid);
+    }
+
     render() {
         if (this.props.isLoading) {
             return (
@@ -41,23 +45,28 @@ const EventPage = class extends Component {
                 <MessageComponent message="Event not found." />
             );
         }
+
+        const editSection = (this.props.currentEvent.isOwner)
+            ? (
+                <div className="level">
+                    <div className="level-left" />
+                    <div className="level-right">
+                        <p className="level-item">
+                            <button className="button is-warning" onClick={this.handleEdit}>Edit</button>
+                        </p>
+                        <p className="level-item">
+                            <button className="button is-danger" onClick={this.handleDelete}>Delete</button>
+                        </p>
+                    </div>
+                </div>
+            ) : null;
+
         const { requirements } = this.props;
 
         return (
             <div>
                 <section className="section">
-                    <div className="level">
-                        <div className="level-left" />
-                        <div className="level-right">
-                            <p className="level-item">
-                                <button className="button is-warning" onClick={this.handleEdit}>Edit</button>
-                            </p>
-                            <p className="level-item">
-                                <button className="button is-danger">Delete</button>
-                            </p>
-                        </div>
-
-                    </div>
+                    {editSection}
                     <EventMetadataContainer currentEvent={this.props.currentEvent} />
                     <br />
                     <div className="container">
@@ -102,6 +111,9 @@ const mapDispatchToProps = function (dispatch) {
         },
         clearCurrentEvent: () => {
             dispatch(clearCurrentEvent());
+        },
+        deleteEvent: (...args) => {
+            dispatch(deleteEvent(...args));
         },
     };
 };

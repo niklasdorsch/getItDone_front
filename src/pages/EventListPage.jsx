@@ -27,14 +27,13 @@ const EventListPage = class extends Component {
                 <MessageComponent message="Waiting to load resources" />
             );
         }
-        if (Object.keys(this.props.events).length === 0) {
+        if (!this.props.events || Object.keys(this.props.events).length === 0) {
             return (
-                <MessageComponent message="Could not load component" submessage="Try reloading" />
+                <MessageComponent message="Could not load events, there may be no events" submessage="Try reloading" />
             );
         }
         return (
             <div className="section">
-            
                 <EventListComponent events={this.props.events} />
             </div>
         );

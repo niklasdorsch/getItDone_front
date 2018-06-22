@@ -15,6 +15,7 @@ const EventRequirementComponent = class extends Component {
         this.setState(prev => ({ isContributing: !prev.isContributing }));
     }
 
+
     render() {
         return (
             <div className="columns">

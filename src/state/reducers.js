@@ -5,7 +5,8 @@ import {
     RECEIVING_CURRENT_EVENT_INFO,
     SENDING_CURRENT_EVENT_INFO,
     RECEIVING_ALL_EVENTS, SEND_ALL_EVENTS, CLEAR_CURRENT_EVENT,
-    RECEIVING_REQUIREMENT_CONTRIBUTION,
+    RECEIVING_REQUIREMENT_CONTRIBUTION, RECEIVING_USER_EVENTS, SEND_USER_EVENTS,
+    RECEIVE_DELETE_EVENT,
 } from './actions';
 
 const defaultEventState = {
@@ -44,6 +45,8 @@ function event(state = defaultEventState, action) {
         return Object.assign({}, state, { currentEvent: null, eventIsLoading: true });
     case RECEIVING_REQUIREMENT_CONTRIBUTION:
         return Object.assign({}, state, updateUserContribution(state, action));
+    case RECEIVE_DELETE_EVENT:
+        return Object.assign({}, state, { deleteMessage: action.message, deleteError: action.error });
     default:
         return state;
     }
@@ -76,14 +79,19 @@ function requirements(state = defaultRequirementsState, action) {
 
 const defaultEventDashState = {
     events: {},
+    userEvents: {},
     waitingForEvents: false,
 };
 function eventDash(state = defaultEventDashState, action) {
     switch (action.type) {
     case SEND_ALL_EVENTS:
         return Object.assign({}, state, { waitingForEvents: true });
+    case SEND_USER_EVENTS:
+        return Object.assign({}, state, { waitingForEvents: true });
     case RECEIVING_ALL_EVENTS:
         return Object.assign({}, state, { events: action.events, waitingForEvents: false });
+    case RECEIVING_USER_EVENTS:
+        return Object.assign({}, state, { userEvents: action.events, waitingForEvents: false });
     default:
         return state;
     }

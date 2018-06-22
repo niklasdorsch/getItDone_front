@@ -1,5 +1,6 @@
 import { push } from 'react-router-redux';
 import { makeFetchMethod } from './api';
+import { getEventPageURL, EVENT_LIST } from './routes';
 import { requirementsArrayToObject } from '../usefulFunctions';
 
 export const SENDING_CURRENT_EVENT_INFO = 'SENDING_CURRENT_EVENT_INFO';
@@ -20,6 +21,19 @@ export function getEventInformation(eventId) {
         dispatch(sendEventInformation(eventId));
         return makeFetchMethod({
             apiPath: `getEventInfo?eventId=${eventId}`,
+            method: 'GET',
+        }).then(resultJSON => dispatch(receiveEventInformation(resultJSON)))
+            .catch(e => dispatch(receiveEventInformation({
+                error: e,
+            })));
+    };
+}
+
+
+export function getRequirementContributors(requirementId) {
+    return function (dispatch) {
+        return makeFetchMethod({
+            apiPath: `getRequirementContributors?requirementId=${requirementId}`,
             method: 'GET',
         }).then(resultJSON => dispatch(receiveEventInformation(resultJSON)))
             .catch(e => dispatch(receiveEventInformation({
@@ -55,7 +69,7 @@ export function submitNewEvent(eventInformation) {
         const requirements = [];
         Object.entries(eventInformation.requirements).forEach(([key, {
             name: reqName,
-            number,
+            total,
             description: reqDescription,
         }]) => {
             console.log(key);
@@ -63,7 +77,7 @@ export function submitNewEvent(eventInformation) {
                 requirementid: Number(key),
                 name: reqName,
                 description: reqDescription,
-                total: Number(number),
+                total: Number(total),
             });
         });
 
@@ -86,7 +100,7 @@ export function submitNewEvent(eventInformation) {
             body: bodyObject,
         }).then((resultJSON) => {
             if (resultJSON.id) {
-                dispatch(push(`event/${resultJSON.id}`));
+                dispatch(push(getEventPageURL(resultJSON.id)));
             }
             dispatch(receiveCreateNewEvent(resultJSON));
         });
@@ -99,14 +113,40 @@ export function editEvent(eventInformation) {
 }
 
 
+export const SEND_DELETE_EVENT = 'SEND_DELETE_EVENT';
+function sendDeleteEvent() {
+    return { type: SEND_DELETE_EVENT };
+}
+
+export const RECEIVE_DELETE_EVENT = 'RECEIVE_DELETE_EVENT';
+function receiveDeleteEvent(...args) {
+    return { type: RECEIVE_DELETE_EVENT, ...args };
+}
+
+export function deleteEvent(eventId) {
+    return function (dispatch) {
+        dispatch(sendDeleteEvent());
+        return makeFetchMethod({
+            apiPath: `deleteEvent?eventId=${eventId}`,
+            method: 'DELETE',
+        }).then((resultJSON) => {
+            dispatch(receiveDeleteEvent({ message: resultJSON }));
+            dispatch(push(EVENT_LIST));
+        }).catch((e) => {
+            dispatch(receiveDeleteEvent({ error: e }));
+        });
+    };
+}
+
+
 export const CLEAR_CURRENT_EVENT = 'CLEAR_CURRENT_EVENT';
 export function clearCurrentEvent() {
     return { type: CLEAR_CURRENT_EVENT };
 }
 
 export const SEND_ALL_EVENTS = 'SEND_ALL_EVENTS';
-function sendAllEvents(info) {
-    return { type: SEND_ALL_EVENTS, info };
+function sendAllEvents() {
+    return { type: SEND_ALL_EVENTS };
 }
 
 export const RECEIVING_ALL_EVENTS = 'RECEIVING_ALL_EVENTS';
@@ -127,10 +167,26 @@ export function getAllEvents() {
     };
 }
 
+export const SEND_USER_EVENTS = 'SEND_USER_EVENTS';
+function sendUserEvents() {
+    return { type: SEND_USER_EVENTS };
+}
+
+export const RECEIVING_USER_EVENTS = 'RECEIVING_USER_EVENTS';
+function receiveUserEvents({ events }) {
+    return { type: RECEIVING_USER_EVENTS, events };
+}
 
 export function getUserEvents() {
     return function (dispatch) {
-        console.log('Implement get user events');
+        dispatch(sendUserEvents());
+        return makeFetchMethod({
+            apiPath: 'getUserEvents',
+            method: 'GET',
+        }).then((resultJSON) => {
+            const { events } = resultJSON;
+            return dispatch(receiveUserEvents({ events }));
+        });
     };
 }
 
