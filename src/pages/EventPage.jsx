@@ -84,6 +84,7 @@ const EventPage = class extends Component {
                                         userTotal={requirement.user}
                                         name={requirement.name}
                                         description={requirement.description}
+                                        userContributions={requirement.userContributions}
                                     />
                                 </div>
                             ))

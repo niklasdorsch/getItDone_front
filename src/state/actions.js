@@ -10,8 +10,43 @@ function sendEventInformation() {
     return { type: SENDING_CURRENT_EVENT_INFO };
 }
 
+function parseEventInformation(eventInformation) {
+    console.log(eventInformation);
+    const {
+        datetime,
+        name,
+        description,
+        location,
+        isPrivate,
+        eventId,
+    } = eventInformation;
+
+    const requirements = [];
+    Object.entries(eventInformation.requirements).forEach(([key, {
+        name: reqName,
+        total,
+        description: reqDescription,
+    }]) => {
+        requirements.push({
+            requirementid: Number(key),
+            name: reqName,
+            description: reqDescription,
+            total: Number(total),
+        });
+    });
+
+    return {
+        datetime: datetime.format('YYYY-MM-DD HH:mm:ss'),
+        eventId,
+        name,
+        description,
+        location,
+        requirements,
+        isPrivate,
+    };
+}
+
 function receiveEventInformation(event) {
-    console.log(event);
     const requirements = requirementsArrayToObject(event.requirements);
     return { type: RECEIVING_CURRENT_EVENT_INFO, event, requirements };
 }
@@ -29,14 +64,27 @@ export function getEventInformation(eventId) {
     };
 }
 
+export const SEND_REQUIREMENT_CONTRIBUTION = 'SEND_REQUIREMENT_CONTRIBUTION';
+function sendRequirementContributors() {
+    return { type: SEND_REQUIREMENT_CONTRIBUTION };
+}
+
+export const RECEIVE_REQUIREMENT_CONTRIBUTION = 'RECEIVE_REQUIREMENT_CONTRIBUTION';
+function receiveRequirementContributors({ userContributions, requirementId }) {
+    return { type: RECEIVE_REQUIREMENT_CONTRIBUTION, userContributions, requirementId };
+}
 
 export function getRequirementContributors(requirementId) {
     return function (dispatch) {
+        dispatch(sendRequirementContributors());
         return makeFetchMethod({
             apiPath: `getRequirementContributors?requirementId=${requirementId}`,
             method: 'GET',
-        }).then(resultJSON => dispatch(receiveEventInformation(resultJSON)))
-            .catch(e => dispatch(receiveEventInformation({
+        })
+            .then((resultJSON) => {
+                dispatch(receiveRequirementContributors({ userContributions: resultJSON, requirementId }));
+            })
+            .catch(e => dispatch(receiveRequirementContributors({
                 error: e,
             })));
     };
@@ -57,40 +105,8 @@ function receiveCreateNewEvent(info) {
 }
 
 export function submitNewEvent(eventInformation) {
-    return function (dispatch, getState) {
-        const {
-            datetime,
-            name,
-            description,
-            location,
-            isPrivate,
-        } = eventInformation;
-
-        const requirements = [];
-        Object.entries(eventInformation.requirements).forEach(([key, {
-            name: reqName,
-            total,
-            description: reqDescription,
-        }]) => {
-            console.log(key);
-            requirements.push({
-                requirementid: Number(key),
-                name: reqName,
-                description: reqDescription,
-                total: Number(total),
-            });
-        });
-
-        const bodyObject = {
-            eventId: 0,
-            datetime: datetime.format('YYYY-MM-DD HH:mm:ss'),
-            name,
-            description,
-            location,
-            requirements,
-            isPrivate,
-            userId: getState().user.uid,
-        };
+    return function (dispatch) {
+        const bodyObject = parseEventInformation(eventInformation);
 
         dispatch(sendCreateNewEvent());
 
@@ -108,8 +124,22 @@ export function submitNewEvent(eventInformation) {
 }
 
 export function editEvent(eventInformation) {
-    console.log('Implement edit');
-    console.log(eventInformation);
+    return function (dispatch) {
+        const bodyObject = parseEventInformation(eventInformation);
+
+        dispatch(sendCreateNewEvent());
+        console.log(bodyObject);
+        return makeFetchMethod({
+            apiPath: 'editEvent',
+            method: 'PUT',
+            body: bodyObject,
+        }).then((resultJSON) => {
+            if (resultJSON.id) {
+                dispatch(push(getEventPageURL(resultJSON.id)));
+            }
+            dispatch(receiveCreateNewEvent(resultJSON));
+        });
+    };
 }
 
 
@@ -161,6 +191,11 @@ export function getAllEvents() {
             apiPath: 'getAllEvents',
             method: 'GET',
         }).then((resultJSON) => {
+            if (!resultJSON) {
+                return dispatch(receiveAllEvents({
+                    error: 'Could not load events',
+                }));
+            }
             const { events } = resultJSON;
             return dispatch(receiveAllEvents({ events }));
         });

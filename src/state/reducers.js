@@ -7,12 +7,9 @@ import {
     RECEIVING_ALL_EVENTS, SEND_ALL_EVENTS, CLEAR_CURRENT_EVENT,
     RECEIVING_REQUIREMENT_CONTRIBUTION, RECEIVING_USER_EVENTS, SEND_USER_EVENTS,
     RECEIVE_DELETE_EVENT,
+    RECEIVE_REQUIREMENT_CONTRIBUTION, SEND_REQUIREMENT_CONTRIBUTION,
 } from './actions';
 
-const defaultEventState = {
-    currentEvent: {},
-    eventIsLoading: true,
-};
 
 const updateUserContribution = (state, action) => {
     const { requirementId, amount } = action;
@@ -31,6 +28,28 @@ const updateUserContribution = (state, action) => {
     };
 };
 
+const updateRequirementDetail = (state, action) => {
+    const { userContributions, requirementId } = action;
+    const { [requirementId]: thisRequirement, ...otherRequirements } = state.requirements;
+    delete thisRequirement.userContributions;
+    const { ...rest } = thisRequirement;
+    return {
+        requirements: {
+            [requirementId]: {
+                userContributions,
+                ...rest,
+            },
+            ...otherRequirements,
+        },
+    };
+};
+
+const defaultEventState = {
+    currentEvent: {},
+    eventIsLoading: true,
+    requirementDetailsLoading: false,
+};
+
 function event(state = defaultEventState, action) {
     switch (action.type) {
     case SENDING_CURRENT_EVENT_INFO:
@@ -47,6 +66,10 @@ function event(state = defaultEventState, action) {
         return Object.assign({}, state, updateUserContribution(state, action));
     case RECEIVE_DELETE_EVENT:
         return Object.assign({}, state, { deleteMessage: action.message, deleteError: action.error });
+    case SEND_REQUIREMENT_CONTRIBUTION:
+        return Object.assign({}, state, { requirementDetailsLoading: true });
+    case RECEIVE_REQUIREMENT_CONTRIBUTION:
+        return Object.assign({}, state, updateRequirementDetail(state, action), { requirementDetailsLoading: false });
     default:
         return state;
     }
