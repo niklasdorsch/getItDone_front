@@ -1,3 +1,3 @@
-for requirments set up a refrsh after 
-    - if it has not been updated in 20 minutes
-    - if users subimts contribution,
+how to make the link shareable
+how to make public events viewable if you are not signed in
+how to make private evnetns editable contributableto only users that have link

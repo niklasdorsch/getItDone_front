@@ -18,7 +18,7 @@ function parseEventInformation(eventInformation) {
         description,
         location,
         isPrivate,
-        eventId,
+        eventId = 0,
     } = eventInformation;
 
     const requirements = [];
@@ -28,7 +28,7 @@ function parseEventInformation(eventInformation) {
         description: reqDescription,
     }]) => {
         requirements.push({
-            requirementid: Number(key),
+            requirementId: Number(key),
             name: reqName,
             description: reqDescription,
             total: Number(total),
@@ -123,12 +123,26 @@ export function submitNewEvent(eventInformation) {
     };
 }
 
+export const SEND_EDIT_EVENT = 'SEND_EDIT_EVENT';
+export const RECEIVE_EDIT_EVENT = 'RECEIVE_EDIT_EVENT';
+
+function sendEditEvent() {
+    return { type: SEND_EDIT_EVENT };
+}
+function receiveEditEvent(info) {
+    return {
+        type: RECEIVE_EDIT_EVENT,
+        eventId: info.id,
+    };
+}
+
 export function editEvent(eventInformation) {
     return function (dispatch) {
         const bodyObject = parseEventInformation(eventInformation);
 
-        dispatch(sendCreateNewEvent());
-        console.log(bodyObject);
+        bodyObject.deletedRequirements = eventInformation.deletedRequirements;
+
+        dispatch(sendEditEvent());
         return makeFetchMethod({
             apiPath: 'editEvent',
             method: 'PUT',
@@ -137,7 +151,7 @@ export function editEvent(eventInformation) {
             if (resultJSON.id) {
                 dispatch(push(getEventPageURL(resultJSON.id)));
             }
-            dispatch(receiveCreateNewEvent(resultJSON));
+            dispatch(receiveEditEvent(resultJSON));
         });
     };
 }

@@ -15,26 +15,28 @@ const EventListComponent = class extends Component {
 
     render() {
         return (
-            <table className="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.props.events.map(event => (
-                        <tr key={event.eventId} className="event-list-row" onClick={this.goToPage(event.eventId)}>
-                            <td>{event.name}</td>
-                            <td><MomentComponent timestamp={event.eventdate} /></td>
-                            <td>{event.location}</td>
-                            <td>{event.description}</td>
+            <div className="container">
+                <table className="table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Description</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {this.props.events.map(event => (
+                            <tr key={event.eventId} className="event-list-row" onClick={this.goToPage(event.eventId)}>
+                                <td>{event.name}</td>
+                                <td><MomentComponent timestamp={event.eventdate} /></td>
+                                <td>{event.location}</td>
+                                <td>{event.description}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 };

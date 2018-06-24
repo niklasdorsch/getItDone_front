@@ -48,7 +48,7 @@ const EventPage = class extends Component {
 
         const editSection = (this.props.currentEvent.isOwner)
             ? (
-                <div className="level">
+                <div className="container level">
                     <div className="level-left" />
                     <div className="level-right">
                         <p className="level-item">
@@ -76,7 +76,7 @@ const EventPage = class extends Component {
                         {(requirements && Object.keys(requirements).length > 0)
                             ?
                             Object.entries(requirements).map(([id, requirement]) => (
-                                <div key={requirement.requirementid}>
+                                <div key={requirement.requirementId}>
                                     <EventRequirementComponent
                                         id={id}
                                         current={requirement.current}
