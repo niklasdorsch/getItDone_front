@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
-import { logoutUser, loginUser } from '../state/actions';
+import { logoutUser } from '../state/actions';
 
 import { LANDING } from '../state/routes';
 
@@ -22,7 +22,7 @@ const LogoutComponent = class extends Component {
     render() {
         return (
             <div>
-                <button onClick={this.logout}>
+                <button className="button is-primary is-size-4" onClick={this.logout}>
                     Log out
                 </button>
             </div>
@@ -35,9 +35,6 @@ const mapDispatchToProps = function (dispatch) {
     return {
         logoutUser: (...args) => {
             dispatch(logoutUser(...args));
-        },
-        loginUser: (...args) => {
-            dispatch(loginUser(...args));
         },
     };
 };

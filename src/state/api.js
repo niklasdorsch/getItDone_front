@@ -1,7 +1,5 @@
 import { store } from './reduxStore';
-
-// const apiURL = 'https://getitdone-api.herokuapp.com/';
-const apiURL = 'http://127.0.0.1:10010/';
+import { apiUrl } from '../../config';
 
 
 async function makeFetchMethod({
@@ -19,7 +17,7 @@ async function makeFetchMethod({
     myHeaders.append('Content-Type', 'application/json');
 
 
-    return fetch(`${apiURL}${apiPath}`, {
+    return fetch(`${apiUrl}${apiPath}`, {
         mode: 'cors',
         method,
         headers: myHeaders,

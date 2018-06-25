@@ -15,8 +15,16 @@ const EventPage = class extends Component {
 
     render() {
         return (
-            <div>
-                <LogoutButton />
+            <div className="section">
+                <div className="container">
+                    <p className="title">
+                        Profile Page
+                    </p>
+                    <p className="subtitle">
+                        Profile page is not implemented
+                    </p>
+                    <LogoutButton />
+                </div>
             </div>
         );
     }

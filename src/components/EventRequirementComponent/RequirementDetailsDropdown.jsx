@@ -21,7 +21,6 @@ const DetailDropdown = class extends Component {
     }
 
     render() {
-        console.log(this.props);
         if (this.props.loading) {
             return (
                 <div className="has-text-centered">
@@ -42,7 +41,6 @@ const DetailDropdown = class extends Component {
                             </thead>
                             <tbody>
                                 {this.props.userContributions.map((userContribution) => {
-                                    console.log(userContribution);
                                     return (
                                         <tr key={userContribution.userId}>
                                             <td>

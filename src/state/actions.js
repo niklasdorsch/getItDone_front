@@ -2,6 +2,7 @@ import { push } from 'react-router-redux';
 import { makeFetchMethod } from './api';
 import { getEventPageURL, EVENT_LIST } from './routes';
 import { requirementsArrayToObject } from '../usefulFunctions';
+import { logoutMethod } from './firebase';
 
 export const SENDING_CURRENT_EVENT_INFO = 'SENDING_CURRENT_EVENT_INFO';
 export const RECEIVING_CURRENT_EVENT_INFO = 'RECEIVING_CURRENT_EVENT_INFO';
@@ -48,7 +49,8 @@ function parseEventInformation(eventInformation) {
 
 function receiveEventInformation(event) {
     const requirements = requirementsArrayToObject(event.requirements);
-    return { type: RECEIVING_CURRENT_EVENT_INFO, event, requirements };
+    const { isFollowing } = event;
+    return { type: RECEIVING_CURRENT_EVENT_INFO, event, requirements, isFollowing };
 }
 
 export function getEventInformation(eventId) {
@@ -249,8 +251,17 @@ export function addUserInfo({ uid, token }) {
 }
 
 export const LOGOUT_USER = 'LOGOUT_USER';
-export function logoutUser() {
+function doLogout() {
     return { type: LOGOUT_USER };
+}
+export function logoutUser() {
+    return function (dispatch) {
+        logoutMethod().then(() => {
+            dispatch(doLogout());
+        }).catch(() => {
+            console.log('Logout unsuccessful');
+        });
+    };
 }
 
 export const SENDING_REQUIREMENT_CONTRIBUTION = 'SENDING_REQUIREMENT_CONTRIBUTION';
@@ -277,6 +288,29 @@ export function submitNewContribution({ requirementId, amount }) {
             body: bodyObject,
         }).then((resultJSON) => {
             dispatch(receiveRequirementContribution(resultJSON));
+        });
+    };
+}
+
+
+export const SEND_IS_FOLLOWING_EVENT = 'SEND_SET_IS_FOLLOWING_EVENT';
+function sendIsFollowingEvent() {
+    return { type: SEND_IS_FOLLOWING_EVENT };
+}
+
+export const RECEIVE_IS_FOLLOWING_EVENT = 'RECEIVE_IS_FOLLOWING_EVENT';
+function receiveIsFollowingEvent({ isFollowing }) {
+    return { type: RECEIVE_IS_FOLLOWING_EVENT, isFollowing };
+}
+
+export function setFollowEvent({ isFollowing, eventId }) {
+    return function (dispatch) {
+        dispatch(sendIsFollowingEvent());
+        return makeFetchMethod({
+            apiPath: `setIsFollowing?isFollowing=${isFollowing}&eventId=${eventId}`,
+            method: 'PUT',
+        }).then((resultJSON) => {
+            dispatch(receiveIsFollowingEvent(resultJSON));
         });
     };
 }

@@ -8,6 +8,7 @@ import {
     RECEIVING_REQUIREMENT_CONTRIBUTION, RECEIVING_USER_EVENTS, SEND_USER_EVENTS,
     RECEIVE_DELETE_EVENT,
     RECEIVE_REQUIREMENT_CONTRIBUTION, SEND_REQUIREMENT_CONTRIBUTION,
+    RECEIVE_IS_FOLLOWING_EVENT,
 } from './actions';
 
 
@@ -59,6 +60,7 @@ function event(state = defaultEventState, action) {
             currentEvent: action.event,
             requirements: action.requirements,
             eventIsLoading: false,
+            isFollowing: action.isFollowing,
         });
     case CLEAR_CURRENT_EVENT:
         return Object.assign({}, state, { currentEvent: null, eventIsLoading: true });
@@ -70,13 +72,14 @@ function event(state = defaultEventState, action) {
         return Object.assign({}, state, { requirementDetailsLoading: true });
     case RECEIVE_REQUIREMENT_CONTRIBUTION:
         return Object.assign({}, state, updateRequirementDetail(state, action), { requirementDetailsLoading: false });
+    case RECEIVE_IS_FOLLOWING_EVENT:
+        return Object.assign({}, state, { isFollowing: action.isFollowing });
     default:
         return state;
     }
 }
 
 const defaultUserState = {
-    userInfo: null,
 };
 
 function user(state = defaultUserState, action) {
@@ -84,7 +87,7 @@ function user(state = defaultUserState, action) {
     case ADD_USER_INFO:
         return Object.assign({}, state, { uid: action.uid, token: action.token });
     case LOGOUT_USER:
-        return Object.assign({}, state, { userInfo: null });
+        return Object.assign({}, defaultUserState);
     default:
         return state;
     }

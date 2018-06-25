@@ -7,7 +7,7 @@ import EventRequirementComponent from '../components/EventRequirementComponent';
 import EventMetadataContainer from '../components/EventMetadataContainer';
 import MessageComponent from '../components/MessageComponent';
 
-import { getEventInformation, clearCurrentEvent, deleteEvent } from '../state/actions';
+import { getEventInformation, clearCurrentEvent, deleteEvent, setFollowEvent } from '../state/actions';
 import { getEditEventPageURL } from '../state/routes';
 
 const EventPage = class extends Component {
@@ -19,7 +19,7 @@ const EventPage = class extends Component {
     }
 
     componentDidMount() {
-        this.props.getEventInformation(this.props.match.params.eventid);
+        this.props.getEventInformation(this.props.match.params.eventId);
     }
 
     componentWillUnmount() {
@@ -27,11 +27,18 @@ const EventPage = class extends Component {
     }
 
     handleEdit = () => {
-        this.props.history.push(getEditEventPageURL(this.props.match.params.eventid));
+        this.props.history.push(getEditEventPageURL(this.props.match.params.eventId));
     }
 
     handleDelete = () => {
-        this.props.deleteEvent(this.props.match.params.eventid);
+        this.props.deleteEvent(this.props.match.params.eventId);
+    }
+
+    toggleFollow = () => {
+        this.props.setFollowEvent({
+            isFollowing: !this.props.isFollowing,
+            eventId: this.props.match.params.eventId,
+        });
     }
 
     render() {
@@ -49,7 +56,16 @@ const EventPage = class extends Component {
         const editSection = (this.props.currentEvent.isOwner)
             ? (
                 <div className="container level">
-                    <div className="level-left" />
+                    <div className="level-left">
+                        <p className="level-item">
+                            <button
+                                className={`button is-primary ${(this.props.isFollowing) ? 'is-outlined' : null}`}
+                                onClick={this.toggleFollow}
+                            >
+                                Follow{(this.props.isFollowing) ? 'ing' : null}
+                            </button>
+                        </p>
+                    </div>
                     <div className="level-right">
                         <p className="level-item">
                             <button className="button is-warning" onClick={this.handleEdit}>Edit</button>
@@ -102,6 +118,7 @@ const mapStateToProps = function (state) {
         currentEvent: state.event.currentEvent,
         requirements: state.event.requirements,
         isLoading: state.event.eventIsLoading,
+        isFollowing: state.event.isFollowing,
     };
 };
 
@@ -115,6 +132,9 @@ const mapDispatchToProps = function (dispatch) {
         },
         deleteEvent: (...args) => {
             dispatch(deleteEvent(...args));
+        },
+        setFollowEvent: (...args) => {
+            dispatch(setFollowEvent(...args));
         },
     };
 };

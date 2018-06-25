@@ -3,17 +3,10 @@ import 'firebase/auth';
 import { store } from './reduxStore';
 import { addUserInfo } from './actions';
 import { makeFetchMethod } from './api';
+import { firbaseConfig } from '../../config';
 
-const config = {
-    apiKey: 'AIzaSyBHvOMKE7BJEw7ru_0vBxtweBn640F2Wf8',
-    authDomain: 'getitdone-6183f.firebaseapp.com',
-    databaseURL: 'https://getitdone-6183f.firebaseio.com',
-    projectId: 'getitdone-6183f',
-    storageBucket: 'getitdone-6183f.appspot.com',
-    messagingSenderId: '487989892996',
-};
 
-firebase.initializeApp(config);
+firebase.initializeApp(firbaseConfig);
 
 const provider = new firebase.auth.FacebookAuthProvider();
 provider.addScope('user_birthday');
@@ -51,10 +44,13 @@ const loginMethod = () => auth()
         throw e;
     });
 
+const logoutMethod = () => auth().signOut();
+
 module.exports = {
     provider,
     auth,
     loginMethod,
     addUser,
+    logoutMethod,
 };
 

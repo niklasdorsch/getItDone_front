@@ -21,6 +21,10 @@ module.exports = {
         }),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            'process.env.GET_IT_DONE_FIREBASE': process.env.GET_IT_DONE_FIREBASE,
+            'process.env.GET_IT_DONE_API': process.env.GET_IT_DONE_API,
+        }),
     ],
     output: {
         filename: '[name].bundle.js',

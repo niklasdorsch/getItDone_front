@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import LogoutButton from '../components/LogoutButton';
 import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
 import { CREATE_EVENT } from '../state/routes';
 
 const LandingPage = class extends Component {
