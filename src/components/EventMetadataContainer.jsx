@@ -57,13 +57,25 @@ const EventMetadataContainer = class extends Component {
                         <span>
                             Organzied by&nbsp;
                             {
-                                htmlArrayToAccumilationStyle(owners.map(owner => (
-                                    <a
-                                        key={owner.userid}
-                                        href={getUserPageURL(owner.userid)}
-                                    >
-                                        {owner.name}
-                                    </a>)))
+                                htmlArrayToAccumilationStyle(owners.map((owner) => {
+                                    if (this.props.currentEvent.isPublic) {
+                                        return (
+                                            <span
+                                                key={owner.userid}
+                                            >
+                                                {owner.name}
+                                            </span>
+                                        );
+                                    }
+                                    return (
+                                        <a
+                                            key={owner.userid}
+                                            href={getUserPageURL(owner.userid)}
+                                        >
+                                            {owner.name}
+                                        </a>
+                                    );
+                                }))
                             }
                         </span>
                     </p>

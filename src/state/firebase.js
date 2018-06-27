@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { store } from './reduxStore';
-import { addUserInfo, finishedInitializing } from './actions';
+import { addUserInfo, finishedInitializing, startInitializing } from './actions';
 import { makeFetchMethod } from './api';
 import { firbaseConfig } from '../../config';
 
@@ -17,8 +17,6 @@ const addUser = (uid, name) => {
     makeFetchMethod({
         apiPath: `addUser?userId=${uid}&name=${name}`,
         method: 'POST',
-    }).then((resultJSON) => {
-        console.log(resultJSON);
     });
 };
 
@@ -36,14 +34,17 @@ firebase.auth().onAuthStateChanged(async (user) => {
     store.dispatch(finishedInitializing());
 });
 
-const loginMethod = () => auth()
-    .signInWithPopup(provider)
-    .then(() => {
-        console.log('Success');
-    })
-    .catch((e) => {
-        throw e;
-    });
+const loginMethod = () => {
+    store.dispatch(startInitializing());
+    return auth()
+        .signInWithPopup(provider)
+        .then(() => {
+            console.log('Success');
+        })
+        .catch((e) => {
+            throw e;
+        });
+};
 
 const logoutMethod = () => auth().signOut();
 

@@ -155,7 +155,7 @@ const mapDispatchToProps = function (dispatch) {
     return {
         getEventInformation: (...args) => {
             dispatch(getEventInformation(...args));
-        },   
+        },
         getPublicEventInformation: (...args) => {
             dispatch(getPublicEventInformation(...args));
         },

@@ -44,9 +44,17 @@ const DetailDropdown = class extends Component {
                                     return (
                                         <tr key={userContribution.userId}>
                                             <td>
-                                                <a href={getUserPageURL(userContribution.userId)}>
-                                                    { userContribution.name }
-                                                </a>
+                                                { (this.props.isPublic) ?
+                                                    (
+                                                        <p>{ userContribution.name }</p>
+                                                    )
+                                                    :
+                                                    (
+                                                        <a href={getUserPageURL(userContribution.userId)}>
+                                                            { userContribution.name }
+                                                        </a>
+                                                    )
+                                                }
                                             </td>
                                             <td>
                                                 { userContribution.amount }

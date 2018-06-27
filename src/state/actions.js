@@ -339,3 +339,8 @@ export const FINISHED_INITIALIZING = 'FINISHED_INITIALIZING';
 export function finishedInitializing() {
     return { type: FINISHED_INITIALIZING };
 }
+
+export const START_INITIALIZING = 'START_INITIALIZING';
+export function startInitializing() {
+    return { type: START_INITIALIZING };
+}

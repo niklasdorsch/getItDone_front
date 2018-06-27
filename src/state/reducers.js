@@ -8,7 +8,7 @@ import {
     RECEIVING_REQUIREMENT_CONTRIBUTION, RECEIVING_USER_EVENTS, SEND_USER_EVENTS,
     RECEIVE_DELETE_EVENT,
     RECEIVE_REQUIREMENT_CONTRIBUTION, SEND_REQUIREMENT_CONTRIBUTION,
-    RECEIVE_IS_FOLLOWING_EVENT, FINISHED_INITIALIZING,
+    RECEIVE_IS_FOLLOWING_EVENT, FINISHED_INITIALIZING, START_INITIALIZING,
 } from './actions';
 
 
@@ -91,6 +91,8 @@ function user(state = defaultUserState, action) {
         return Object.assign({}, { uid: null, token: null });
     case FINISHED_INITIALIZING:
         return Object.assign({}, state, { isInitializing: false });
+    case START_INITIALIZING:
+        return Object.assign({}, state, { isInitializing: true });
     default:
         return state;
     }

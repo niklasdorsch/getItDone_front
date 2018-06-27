@@ -24,7 +24,6 @@ async function makeFetchMethod({
         body: (body) ? JSON.stringify(body) : null,
     }).then(
         (response) => {
-            console.log(response);
             if (Math.floor(response.status / 100) !== 2) {
                 throw Error(`Request failed: ${response.status} ${response.statusText}`);
             }

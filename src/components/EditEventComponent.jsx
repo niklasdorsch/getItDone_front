@@ -297,7 +297,7 @@ const EditEventComponent = class extends Component {
                                 className="button is-primary is-large"
                                 onClick={this.handleSubmit}
                             >
-                                Submit New Event
+                                Submit Event
                             </button>
                         </div>
                     </div>

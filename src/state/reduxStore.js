@@ -5,8 +5,6 @@ import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { routerMiddleware } from 'react-router-redux';
 
-
-import { stateLoader } from './StateLoader';
 import { history } from './history';
 
 import todoApp from './reducers';
@@ -30,7 +28,7 @@ if (process.env.NODE_ENV !== 'production') {
     middleware = [...middleware, loggerMiddleware];
 }
 
-const store = createStore(todoApp, /* stateLoader.loadState(), */ applyMiddleware(...middleware));
+const store = createStore(todoApp, applyMiddleware(...middleware));
 
 
 module.exports = {
