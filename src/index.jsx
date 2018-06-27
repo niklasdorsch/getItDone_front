@@ -9,9 +9,9 @@ import { store } from './state/reduxStore';
 
 require('babel-polyfill');
 
-store.subscribe(() => {
-    stateLoader.saveLoginState(store.getState());
-});
+// store.subscribe(() => {
+//     stateLoader.saveLoginState(store.getState());
+// });
 
 
 render(

@@ -35,9 +35,14 @@ const ProgressBar = class extends Component {
                     </div>
                     <div className="level-right">
                         <div className="level-item">
-                            <button className="button is-primary" onClick={this.props.toggleContribute}>
-                                {this.props.isContributing ? 'Cancel' : 'Contribute'}
-                            </button>
+                            { (this.props.isPublic) ?
+                                null :
+                                (
+                                    <button className="button is-primary" onClick={this.props.toggleContribute}>
+                                        {this.props.isContributing ? 'Cancel' : 'Contribute'}
+                                    </button>
+                                )
+                            }
                         </div>
                     </div>
                 </div>

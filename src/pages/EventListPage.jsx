@@ -34,6 +34,15 @@ const EventListPage = class extends Component {
         }
         return (
             <div className="section">
+                <div className="container">
+                    <p className="title">
+                        Events
+                    </p>
+                    <p className="subtitle">
+                        Public events that you can help out with
+                    </p>
+                </div>
+                <br />
                 <EventListComponent events={this.props.events} />
             </div>
         );

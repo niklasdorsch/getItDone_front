@@ -37,6 +37,15 @@ const EventListPage = class extends Component {
         }
         return (
             <div className="section">
+                <div className="container">
+                    <p className="title">
+                        Your Events
+                    </p>
+                    <p className="subtitle">
+                        Private events that you are putting on or following
+                    </p>
+                </div>
+                <br />
                 <EventListComponent events={this.props.userEvents} />
             </div>
         );

@@ -19,7 +19,7 @@ function parseEventInformation(eventInformation) {
         description,
         location,
         isPrivate,
-        eventId = 0,
+        eventId = '',
     } = eventInformation;
 
     const requirements = [];
@@ -50,7 +50,12 @@ function parseEventInformation(eventInformation) {
 function receiveEventInformation(event) {
     const requirements = requirementsArrayToObject(event.requirements);
     const { isFollowing } = event;
-    return { type: RECEIVING_CURRENT_EVENT_INFO, event, requirements, isFollowing };
+    return {
+        type: RECEIVING_CURRENT_EVENT_INFO,
+        event,
+        requirements,
+        isFollowing,
+    };
 }
 
 export function getEventInformation(eventId) {
@@ -58,6 +63,19 @@ export function getEventInformation(eventId) {
         dispatch(sendEventInformation(eventId));
         return makeFetchMethod({
             apiPath: `getEventInfo?eventId=${eventId}`,
+            method: 'GET',
+        }).then(resultJSON => dispatch(receiveEventInformation(resultJSON)))
+            .catch(e => dispatch(receiveEventInformation({
+                error: e,
+            })));
+    };
+}
+
+export function getPublicEventInformation(eventId) {
+    return function (dispatch) {
+        dispatch(sendEventInformation(eventId));
+        return makeFetchMethod({
+            apiPath: `getPublicEventInfo?eventId=${eventId}`,
             method: 'GET',
         }).then(resultJSON => dispatch(receiveEventInformation(resultJSON)))
             .catch(e => dispatch(receiveEventInformation({
@@ -102,7 +120,7 @@ function sendCreateNewEvent() {
 function receiveCreateNewEvent(info) {
     return {
         type: RECEIVING_CREATE_NEW_EVENT,
-        eventId: info.id,
+        eventId: info.eventId,
     };
 }
 
@@ -117,8 +135,8 @@ export function submitNewEvent(eventInformation) {
             method: 'POST',
             body: bodyObject,
         }).then((resultJSON) => {
-            if (resultJSON.id) {
-                dispatch(push(getEventPageURL(resultJSON.id)));
+            if (resultJSON.eventId) {
+                dispatch(push(getEventPageURL(resultJSON.eventId)));
             }
             dispatch(receiveCreateNewEvent(resultJSON));
         });
@@ -134,7 +152,7 @@ function sendEditEvent() {
 function receiveEditEvent(info) {
     return {
         type: RECEIVE_EDIT_EVENT,
-        eventId: info.id,
+        eventId: info.eventId,
     };
 }
 
@@ -150,8 +168,9 @@ export function editEvent(eventInformation) {
             method: 'PUT',
             body: bodyObject,
         }).then((resultJSON) => {
-            if (resultJSON.id) {
-                dispatch(push(getEventPageURL(resultJSON.id)));
+            if (resultJSON.eventId) {
+
+                dispatch(push(getEventPageURL(resultJSON.eventId)));
             }
             dispatch(receiveEditEvent(resultJSON));
         });
@@ -310,7 +329,13 @@ export function setFollowEvent({ isFollowing, eventId }) {
             apiPath: `setIsFollowing?isFollowing=${isFollowing}&eventId=${eventId}`,
             method: 'PUT',
         }).then((resultJSON) => {
+            console.log(resultJSON);
             dispatch(receiveIsFollowingEvent(resultJSON));
         });
     };
+}
+
+export const FINISHED_INITIALIZING = 'FINISHED_INITIALIZING';
+export function finishedInitializing() {
+    return { type: FINISHED_INITIALIZING };
 }

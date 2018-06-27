@@ -30,7 +30,7 @@ if (process.env.NODE_ENV !== 'production') {
     middleware = [...middleware, loggerMiddleware];
 }
 
-const store = createStore(todoApp, stateLoader.loadState(), applyMiddleware(...middleware));
+const store = createStore(todoApp, /* stateLoader.loadState(), */ applyMiddleware(...middleware));
 
 
 module.exports = {

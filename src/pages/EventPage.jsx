@@ -6,8 +6,13 @@ import { compose } from 'recompose';
 import EventRequirementComponent from '../components/EventRequirementComponent';
 import EventMetadataContainer from '../components/EventMetadataContainer';
 import MessageComponent from '../components/MessageComponent';
+import PublicNavBar from '../components/PublicNavBar';
 
-import { getEventInformation, clearCurrentEvent, deleteEvent, setFollowEvent } from '../state/actions';
+import {
+    getEventInformation, getPublicEventInformation, clearCurrentEvent,
+    deleteEvent, setFollowEvent,
+} from '../state/actions';
+
 import { getEditEventPageURL } from '../state/routes';
 
 const EventPage = class extends Component {
@@ -19,7 +24,11 @@ const EventPage = class extends Component {
     }
 
     componentDidMount() {
-        this.props.getEventInformation(this.props.match.params.eventId);
+        if (this.props.isLoggedIn) {
+            this.props.getEventInformation(this.props.match.params.eventId);
+        } else {
+            this.props.getPublicEventInformation(this.props.match.params.eventId);
+        }
     }
 
     componentWillUnmount() {
@@ -52,35 +61,53 @@ const EventPage = class extends Component {
                 <MessageComponent message="Event not found." />
             );
         }
-
-        const editSection = (this.props.currentEvent.isOwner)
-            ? (
-                <div className="container level">
-                    <div className="level-left">
-                        <p className="level-item">
-                            <button
-                                className={`button is-primary ${(this.props.isFollowing) ? 'is-outlined' : null}`}
-                                onClick={this.toggleFollow}
-                            >
-                                Follow{(this.props.isFollowing) ? 'ing' : null}
-                            </button>
-                        </p>
-                    </div>
-                    <div className="level-right">
-                        <p className="level-item">
-                            <button className="button is-warning" onClick={this.handleEdit}>Edit</button>
-                        </p>
-                        <p className="level-item">
-                            <button className="button is-danger" onClick={this.handleDelete}>Delete</button>
-                        </p>
-                    </div>
-                </div>
-            ) : null;
+        const editSection = (
+            <div className="container level">
+                {(this.props.currentEvent.isPublic) ?
+                    (
+                        <div className="level-left" />
+                    ) :
+                    (
+                        <div className="level-left">
+                            <p className="level-item">
+                                <button
+                                    className={`button is-primary ${(this.props.isFollowing) ? 'is-outlined' : null}`}
+                                    onClick={this.toggleFollow}
+                                >
+                                    Follow{(this.props.isFollowing) ? 'ing' : null}
+                                </button>
+                            </p>
+                        </div>
+                    )
+                }
+                {(this.props.currentEvent.isOwner) ?
+                    (
+                        <div className="level-right">
+                            <p className="level-item">
+                                <button className="button is-warning" onClick={this.handleEdit}>Edit</button>
+                            </p>
+                            <p className="level-item">
+                                <button className="button is-danger" onClick={this.handleDelete}>Delete</button>
+                            </p>
+                        </div>
+                    ) :
+                    (
+                        <div className="level-right" />
+                    )
+                }
+            </div>
+        );
 
         const { requirements } = this.props;
 
         return (
             <div>
+                {(this.props.currentEvent.isPublic) ?
+                    (
+                        <PublicNavBar />
+                    )
+                    : null
+                }
                 <section className="section">
                     {editSection}
                     <EventMetadataContainer currentEvent={this.props.currentEvent} />
@@ -101,6 +128,7 @@ const EventPage = class extends Component {
                                         name={requirement.name}
                                         description={requirement.description}
                                         userContributions={requirement.userContributions}
+                                        isPublic={this.props.currentEvent.isPublic}
                                     />
                                 </div>
                             ))
@@ -119,6 +147,7 @@ const mapStateToProps = function (state) {
         requirements: state.event.requirements,
         isLoading: state.event.eventIsLoading,
         isFollowing: state.event.isFollowing,
+        isLoggedIn: state.user.uid,
     };
 };
 
@@ -126,6 +155,9 @@ const mapDispatchToProps = function (dispatch) {
     return {
         getEventInformation: (...args) => {
             dispatch(getEventInformation(...args));
+        },   
+        getPublicEventInformation: (...args) => {
+            dispatch(getPublicEventInformation(...args));
         },
         clearCurrentEvent: () => {
             dispatch(clearCurrentEvent());

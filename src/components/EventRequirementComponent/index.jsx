@@ -19,7 +19,7 @@ const EventRequirementComponent = class extends Component {
     render() {
         return (
             <div className="columns">
-                <div className="column">
+                <div className={`column ${(this.state.isContributing) ? 'is-8' : null}`}>
                     <ProgressBar
                         {...this.props}
                         toggleContribute={this.toggleContribute}

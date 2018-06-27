@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { store } from './reduxStore';
-import { addUserInfo } from './actions';
+import { addUserInfo, finishedInitializing } from './actions';
 import { makeFetchMethod } from './api';
 import { firbaseConfig } from '../../config';
 
@@ -24,15 +24,16 @@ const addUser = (uid, name) => {
 
 firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
-        const { uid } = user;
+        const { uid, displayName } = user;
         const token = await user.getIdToken(true)
             .catch((error) => {
                 console.log(error);
                 throw error;
             });
         store.dispatch(addUserInfo({ token, uid }));
-        addUser(uid, token);
+        addUser(uid, displayName);
     }
+    store.dispatch(finishedInitializing());
 });
 
 const loginMethod = () => auth()
